@@ -1,0 +1,126 @@
+{
+  "@context": "https://spdx.org/rdf/3.0.1/spdx-context.jsonld",
+  "@graph": [
+    {
+      "type": "Tool",
+      "spdxId": "urn:ovrin:tool-ovrin",
+      "name": "ovrin"
+    },
+    {
+      "type": "CreationInfo",
+      "@id": "urn:ovrin:creation",
+      "specVersion": "3.0.1",
+      "created": "1970-01-01T00:00:00+00:00",
+      "createdBy": [
+        "urn:ovrin:tool-ovrin"
+      ]
+    },
+    {
+      "type": "software_File",
+      "spdxId": "urn:ovrin:file-_cursorrules",
+      "creationInfo": "urn:ovrin:creation",
+      "name": ".cursorrules",
+      "software_primaryPurpose": "configuration",
+      "comment": "origin=repo; reviewEnforceable=None; reachableBy=cursor",
+      "verifiedUsing": [
+        {
+          "type": "Hash",
+          "algorithm": "sha256",
+          "hashValue": "aab47e360130de18a27eec82cbf8bcfe23b5e0e2123dbfe559afe8f2225f9221"
+        }
+      ]
+    },
+    {
+      "type": "software_File",
+      "spdxId": "urn:ovrin:file-AGENTS_md",
+      "creationInfo": "urn:ovrin:creation",
+      "name": "AGENTS.md",
+      "software_primaryPurpose": "configuration",
+      "comment": "origin=repo; reviewEnforceable=None; reachableBy=codex-cli,cursor,copilot,devin-desktop,amp",
+      "verifiedUsing": [
+        {
+          "type": "Hash",
+          "algorithm": "sha256",
+          "hashValue": "1981501a2ea9e994181a9564a2dd29c81e5924ca9a56bb3f839660325b84ff9f"
+        }
+      ]
+    },
+    {
+      "type": "software_File",
+      "spdxId": "urn:ovrin:file-CLAUDE_md",
+      "creationInfo": "urn:ovrin:creation",
+      "name": "CLAUDE.md",
+      "software_primaryPurpose": "configuration",
+      "comment": "origin=repo; reviewEnforceable=None; reachableBy=claude-code",
+      "verifiedUsing": [
+        {
+          "type": "Hash",
+          "algorithm": "sha256",
+          "hashValue": "24100c80627b9ddf902283f577742caa5e92a354495428f13f0cd17a50ff2b41"
+        }
+      ]
+    },
+    {
+      "type": "software_File",
+      "spdxId": "urn:ovrin:file-node_modules-left-pad-AGENTS_md",
+      "creationInfo": "urn:ovrin:creation",
+      "name": "node_modules/left-pad/AGENTS.md",
+      "software_primaryPurpose": "configuration",
+      "comment": "origin=installed-dependency; reviewEnforceable=False; reachableBy=",
+      "verifiedUsing": [
+        {
+          "type": "Hash",
+          "algorithm": "sha256",
+          "hashValue": "1c4addfc8bb0d68531728852cca06db8e7240c48ffc9878bbf2eb81e5c7bdeef"
+        }
+      ]
+    },
+    {
+      "type": "software_File",
+      "spdxId": "urn:ovrin:file-packages-api-AGENTS_md",
+      "creationInfo": "urn:ovrin:creation",
+      "name": "packages/api/AGENTS.md",
+      "software_primaryPurpose": "configuration",
+      "comment": "origin=repo; reviewEnforceable=None; reachableBy=codex-cli,cursor,devin-desktop,amp",
+      "verifiedUsing": [
+        {
+          "type": "Hash",
+          "algorithm": "sha256",
+          "hashValue": "c13df3a10d2874df3d948ae7727f99ac448bb8b2e53da225445eb6fd54ca700b"
+        }
+      ]
+    },
+    {
+      "type": "software_File",
+      "spdxId": "urn:ovrin:file-vendor-acme-CLAUDE_md",
+      "creationInfo": "urn:ovrin:creation",
+      "name": "vendor/acme/CLAUDE.md",
+      "software_primaryPurpose": "configuration",
+      "comment": "origin=vendored; reviewEnforceable=None; reachableBy=claude-code",
+      "verifiedUsing": [
+        {
+          "type": "Hash",
+          "algorithm": "sha256",
+          "hashValue": "34876eccae07ee3b58455a20d369d2f83647e36d47ac9e6e444326e462163fe7"
+        }
+      ]
+    },
+    {
+      "type": "software_Sbom",
+      "spdxId": "urn:ovrin:sbom",
+      "creationInfo": "urn:ovrin:creation",
+      "name": "fx",
+      "software_sbomType": [
+        "build"
+      ],
+      "rootElement": [
+        "urn:ovrin:file-_cursorrules",
+        "urn:ovrin:file-AGENTS_md",
+        "urn:ovrin:file-CLAUDE_md",
+        "urn:ovrin:file-node_modules-left-pad-AGENTS_md",
+        "urn:ovrin:file-packages-api-AGENTS_md",
+        "urn:ovrin:file-vendor-acme-CLAUDE_md"
+      ]
+    }
+  ]
+}

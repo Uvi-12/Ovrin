@@ -1,0 +1,340 @@
+{
+  "schemaVersion": "0.1.0",
+  "tool": {
+    "name": "ovrin",
+    "version": "0.1.0"
+  },
+  "harnessRules": {
+    "version": "0.1.0",
+    "verified": "2026-08-11"
+  },
+  "subject": {
+    "path": "/tmp/fx",
+    "isGitRepository": true,
+    "codeownersPresent": true,
+    "codeownersPath": ".github/CODEOWNERS"
+  },
+  "instructions": [
+    {
+      "path": ".cursorrules",
+      "family": "cursor",
+      "activation": "legacy",
+      "digest": "sha256:aab47e360130de18a27eec82cbf8bcfe23b5e0e2123dbfe559afe8f2225f9221",
+      "digestStatus": "complete",
+      "bytes": 5,
+      "origin": {
+        "class": "repo",
+        "container": null,
+        "package": null,
+        "evidence": [
+          "tracked in git"
+        ]
+      },
+      "review": {
+        "codeowners": [
+          "@org/maintainers"
+        ],
+        "ruleMatches": true,
+        "enforceable": null,
+        "reason": "rule matches a tracked path; enforcement depends on branch protection",
+        "source": ".github/CODEOWNERS"
+      },
+      "introducedInAuthorsFirstCommit": true,
+      "git": {
+        "tracked": true,
+        "lastCommit": "114520c8e554418eb289c481c350fd8bd2aa22ab",
+        "lastAuthor": "t",
+        "lastModified": "2026-08-11T03:44:08+00:00",
+        "firstCommit": "114520c8e554418eb289c481c350fd8bd2aa22ab",
+        "firstAuthor": "t"
+      },
+      "gitIgnored": false,
+      "reachability": {
+        "cursor": {
+          "verdict": "loaded",
+          "reason": "within this harness's discovery scope",
+          "confidence": "documented"
+        }
+      }
+    },
+    {
+      "path": "AGENTS.md",
+      "family": "agents",
+      "activation": "native-auto",
+      "digest": "sha256:1981501a2ea9e994181a9564a2dd29c81e5924ca9a56bb3f839660325b84ff9f",
+      "digestStatus": "complete",
+      "bytes": 23,
+      "origin": {
+        "class": "repo",
+        "container": null,
+        "package": null,
+        "evidence": [
+          "tracked in git"
+        ]
+      },
+      "review": {
+        "codeowners": [
+          "@org/platform"
+        ],
+        "ruleMatches": true,
+        "enforceable": null,
+        "reason": "rule matches a tracked path; enforcement depends on branch protection",
+        "source": ".github/CODEOWNERS"
+      },
+      "introducedInAuthorsFirstCommit": true,
+      "git": {
+        "tracked": true,
+        "lastCommit": "114520c8e554418eb289c481c350fd8bd2aa22ab",
+        "lastAuthor": "t",
+        "lastModified": "2026-08-11T03:44:08+00:00",
+        "firstCommit": "114520c8e554418eb289c481c350fd8bd2aa22ab",
+        "firstAuthor": "t"
+      },
+      "gitIgnored": false,
+      "reachability": {
+        "codex-cli": {
+          "verdict": "loaded",
+          "reason": "within this harness's discovery scope",
+          "confidence": "documented"
+        },
+        "cursor": {
+          "verdict": "loaded",
+          "reason": "within this harness's discovery scope",
+          "confidence": "documented"
+        },
+        "copilot": {
+          "verdict": "loaded",
+          "reason": "within this harness's discovery scope",
+          "confidence": "documented"
+        },
+        "devin-desktop": {
+          "verdict": "loaded",
+          "reason": "within this harness's discovery scope",
+          "confidence": "documented"
+        },
+        "amp": {
+          "verdict": "loaded",
+          "reason": "within this harness's discovery scope",
+          "confidence": "documented"
+        }
+      }
+    },
+    {
+      "path": "CLAUDE.md",
+      "family": "claude",
+      "activation": "native-auto",
+      "digest": "sha256:24100c80627b9ddf902283f577742caa5e92a354495428f13f0cd17a50ff2b41",
+      "digestStatus": "complete",
+      "bytes": 17,
+      "origin": {
+        "class": "repo",
+        "container": null,
+        "package": null,
+        "evidence": [
+          "tracked in git"
+        ]
+      },
+      "review": {
+        "codeowners": [
+          "@org/maintainers"
+        ],
+        "ruleMatches": true,
+        "enforceable": null,
+        "reason": "rule matches a tracked path; enforcement depends on branch protection",
+        "source": ".github/CODEOWNERS"
+      },
+      "introducedInAuthorsFirstCommit": true,
+      "git": {
+        "tracked": true,
+        "lastCommit": "114520c8e554418eb289c481c350fd8bd2aa22ab",
+        "lastAuthor": "t",
+        "lastModified": "2026-08-11T03:44:08+00:00",
+        "firstCommit": "114520c8e554418eb289c481c350fd8bd2aa22ab",
+        "firstAuthor": "t"
+      },
+      "gitIgnored": false,
+      "reachability": {
+        "claude-code": {
+          "verdict": "loaded",
+          "reason": "within this harness's discovery scope",
+          "confidence": "documented"
+        }
+      }
+    },
+    {
+      "path": "node_modules/left-pad/AGENTS.md",
+      "family": "agents",
+      "activation": "native-auto",
+      "digest": "sha256:1c4addfc8bb0d68531728852cca06db8e7240c48ffc9878bbf2eb81e5c7bdeef",
+      "digestStatus": "complete",
+      "bytes": 13,
+      "origin": {
+        "class": "installed-dependency",
+        "container": "node_modules",
+        "package": "left-pad@1.3.0",
+        "evidence": [
+          "under vendor directory 'node_modules'",
+          "not tracked (installed)"
+        ]
+      },
+      "review": {
+        "codeowners": [
+          "@org/platform"
+        ],
+        "ruleMatches": true,
+        "enforceable": false,
+        "reason": "path is git-ignored; it never appears in a pull request diff",
+        "source": ".github/CODEOWNERS"
+      },
+      "introducedInAuthorsFirstCommit": null,
+      "git": {
+        "tracked": false,
+        "lastCommit": null,
+        "lastAuthor": null,
+        "lastModified": null,
+        "firstCommit": null,
+        "firstAuthor": null
+      },
+      "gitIgnored": true,
+      "reachability": {
+        "codex-cli": {
+          "verdict": "unverified",
+          "reason": "path is git-ignored; harness ignore behaviour not verified",
+          "confidence": "documented"
+        },
+        "cursor": {
+          "verdict": "unverified",
+          "reason": "path is git-ignored; harness ignore behaviour not verified",
+          "confidence": "documented"
+        },
+        "devin-desktop": {
+          "verdict": "unverified",
+          "reason": "path is git-ignored; harness ignore behaviour not verified",
+          "confidence": "documented"
+        },
+        "amp": {
+          "verdict": "unverified",
+          "reason": "path is git-ignored; harness ignore behaviour not verified",
+          "confidence": "documented"
+        }
+      }
+    },
+    {
+      "path": "packages/api/AGENTS.md",
+      "family": "agents",
+      "activation": "native-auto",
+      "digest": "sha256:c13df3a10d2874df3d948ae7727f99ac448bb8b2e53da225445eb6fd54ca700b",
+      "digestStatus": "complete",
+      "bytes": 14,
+      "origin": {
+        "class": "repo",
+        "container": null,
+        "package": null,
+        "evidence": [
+          "tracked in git"
+        ]
+      },
+      "review": {
+        "codeowners": [
+          "@org/platform"
+        ],
+        "ruleMatches": true,
+        "enforceable": null,
+        "reason": "rule matches a tracked path; enforcement depends on branch protection",
+        "source": ".github/CODEOWNERS"
+      },
+      "introducedInAuthorsFirstCommit": true,
+      "git": {
+        "tracked": true,
+        "lastCommit": "114520c8e554418eb289c481c350fd8bd2aa22ab",
+        "lastAuthor": "t",
+        "lastModified": "2026-08-11T03:44:08+00:00",
+        "firstCommit": "114520c8e554418eb289c481c350fd8bd2aa22ab",
+        "firstAuthor": "t"
+      },
+      "gitIgnored": false,
+      "reachability": {
+        "codex-cli": {
+          "verdict": "loaded",
+          "reason": "within this harness's discovery scope",
+          "confidence": "documented"
+        },
+        "cursor": {
+          "verdict": "loaded",
+          "reason": "within this harness's discovery scope",
+          "confidence": "documented"
+        },
+        "devin-desktop": {
+          "verdict": "loaded",
+          "reason": "within this harness's discovery scope",
+          "confidence": "documented"
+        },
+        "amp": {
+          "verdict": "loaded",
+          "reason": "within this harness's discovery scope",
+          "confidence": "documented"
+        }
+      }
+    },
+    {
+      "path": "vendor/acme/CLAUDE.md",
+      "family": "claude",
+      "activation": "native-auto",
+      "digest": "sha256:34876eccae07ee3b58455a20d369d2f83647e36d47ac9e6e444326e462163fe7",
+      "digestStatus": "complete",
+      "bytes": 9,
+      "origin": {
+        "class": "vendored",
+        "container": "vendor",
+        "package": null,
+        "evidence": [
+          "under vendor directory 'vendor'",
+          "tracked in git"
+        ]
+      },
+      "review": {
+        "codeowners": [
+          "@org/maintainers"
+        ],
+        "ruleMatches": true,
+        "enforceable": null,
+        "reason": "rule matches a tracked path; enforcement depends on branch protection",
+        "source": ".github/CODEOWNERS"
+      },
+      "introducedInAuthorsFirstCommit": true,
+      "git": {
+        "tracked": true,
+        "lastCommit": "114520c8e554418eb289c481c350fd8bd2aa22ab",
+        "lastAuthor": "t",
+        "lastModified": "2026-08-11T03:44:08+00:00",
+        "firstCommit": "114520c8e554418eb289c481c350fd8bd2aa22ab",
+        "firstAuthor": "t"
+      },
+      "gitIgnored": false,
+      "reachability": {
+        "claude-code": {
+          "verdict": "loaded",
+          "reason": "within this harness's discovery scope",
+          "confidence": "documented"
+        }
+      }
+    }
+  ],
+  "summary": {
+    "total": 6,
+    "byOrigin": {
+      "repo": 4,
+      "installed-dependency": 1,
+      "vendored": 1
+    },
+    "byFamily": {
+      "agents": 3,
+      "claude": 2,
+      "cursor": 1
+    },
+    "thirdParty": 2,
+    "notReviewEnforced": 6,
+    "gitIgnored": 1,
+    "introducedInAuthorsFirstCommit": 5
+  }
+}

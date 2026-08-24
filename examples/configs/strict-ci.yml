@@ -1,0 +1,6 @@
+# Example .aim.yml for a strict CI gate.
+# Custom instruction-file patterns your org uses, on top of the built-ins.
+extra_formats:
+  - family: internal
+    patterns: ["INTERNAL_AGENT.md", ".ourrules"]
+    activation: native-auto

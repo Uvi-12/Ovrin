@@ -1,0 +1,173 @@
+{
+  "perEcosystem": {
+    "cargo": {
+      "resolved": 166,
+      "carrierReposAny": 127,
+      "carrierReposThirdParty": 127,
+      "carriageThirdPartyPct": [
+        76.51,
+        69.5,
+        82.31
+      ],
+      "thirdPartyCarriedFiles": 302,
+      "selfOrUnrecognisedFiles": 0,
+      "distinctThirdPartyPackages": 93,
+      "reachability": {
+        "documentedReachableFiles": 257,
+        "deepUnverifiedFiles": 45,
+        "reachableSharePct": [
+          85.1,
+          80.64,
+          88.67
+        ],
+        "carrierReposWithReachableFile": 127
+      },
+      "governance": {
+        "thirdPartyCarrierRepos": 127,
+        "ungovernedThirdPartyCarrierRepos": 91
+      }
+    },
+    "go": {
+      "resolved": 37,
+      "carrierReposAny": 24,
+      "carrierReposThirdParty": 24,
+      "carriageThirdPartyPct": [
+        64.86,
+        48.76,
+        78.17
+      ],
+      "thirdPartyCarriedFiles": 71,
+      "selfOrUnrecognisedFiles": 0,
+      "distinctThirdPartyPackages": 15,
+      "reachability": {
+        "documentedReachableFiles": 54,
+        "deepUnverifiedFiles": 17,
+        "reachableSharePct": [
+          76.06,
+          64.96,
+          84.48
+        ],
+        "carrierReposWithReachableFile": 22
+      },
+      "governance": {
+        "thirdPartyCarrierRepos": 24,
+        "ungovernedThirdPartyCarrierRepos": 17
+      }
+    },
+    "maven": {
+      "resolved": 16,
+      "carrierReposAny": 0,
+      "carrierReposThirdParty": 0,
+      "carriageThirdPartyPct": [
+        0.0,
+        0.0,
+        19.36
+      ],
+      "thirdPartyCarriedFiles": 0,
+      "selfOrUnrecognisedFiles": 0,
+      "distinctThirdPartyPackages": 0,
+      "reachability": {
+        "documentedReachableFiles": 0,
+        "deepUnverifiedFiles": 0,
+        "reachableSharePct": [
+          NaN,
+          NaN,
+          NaN
+        ],
+        "carrierReposWithReachableFile": 0
+      },
+      "governance": {
+        "thirdPartyCarrierRepos": 0,
+        "ungovernedThirdPartyCarrierRepos": 0
+      }
+    },
+    "npm": {
+      "resolved": 166,
+      "carrierReposAny": 27,
+      "carrierReposThirdParty": 27,
+      "carriageThirdPartyPct": [
+        16.27,
+        11.43,
+        22.63
+      ],
+      "thirdPartyCarriedFiles": 47,
+      "selfOrUnrecognisedFiles": 0,
+      "distinctThirdPartyPackages": 20,
+      "reachability": {
+        "documentedReachableFiles": 43,
+        "deepUnverifiedFiles": 4,
+        "reachableSharePct": [
+          91.49,
+          80.07,
+          96.64
+        ],
+        "carrierReposWithReachableFile": 27
+      },
+      "governance": {
+        "thirdPartyCarrierRepos": 27,
+        "ungovernedThirdPartyCarrierRepos": 22
+      }
+    },
+    "python": {
+      "resolved": 144,
+      "carrierReposAny": 2,
+      "carrierReposThirdParty": 2,
+      "carriageThirdPartyPct": [
+        1.39,
+        0.38,
+        4.92
+      ],
+      "thirdPartyCarriedFiles": 11,
+      "selfOrUnrecognisedFiles": 0,
+      "distinctThirdPartyPackages": 10,
+      "reachability": {
+        "documentedReachableFiles": 11,
+        "deepUnverifiedFiles": 0,
+        "reachableSharePct": [
+          100.0,
+          74.12,
+          100.0
+        ],
+        "carrierReposWithReachableFile": 2
+      },
+      "governance": {
+        "thirdPartyCarrierRepos": 2,
+        "ungovernedThirdPartyCarrierRepos": 1
+      }
+    }
+  },
+  "headline": {
+    "thirdPartyCarrierReposTotal": 180,
+    "ungovernedShare": {
+      "count": 131,
+      "of": 180,
+      "pct": [
+        72.78,
+        65.85,
+        78.75
+      ]
+    },
+    "reachableShare": {
+      "count": 178,
+      "of": 180,
+      "pct": [
+        98.89,
+        96.04,
+        99.69
+      ]
+    },
+    "W_thirdParty_AND_ungoverned_AND_reachable": {
+      "count": 129,
+      "of": 180,
+      "pct": [
+        71.67,
+        64.68,
+        77.74
+      ]
+    }
+  },
+  "_meta": {
+    "codeownersRecordsLoaded": 2500,
+    "note": "RQ3-B provenance, RQ3-C governance join, RQ3-D documented reachability. No file was executed or loaded; D reports documented discovery only."
+  }
+}
