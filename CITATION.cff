@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it."
+title: "Ovrin: an inventory for agent instruction files"
+authors:
+  - family-names: Pradhan
+    given-names: Yuvraj
+version: 0.1.0
+date-released: 2026-08
+license: Apache-2.0
+repository-code: "https://github.com/OWNER/ovrin"
