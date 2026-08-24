@@ -1,0 +1,76 @@
+{
+  "totalRecords": 500,
+  "groups": {
+    "active/JavaScript": {
+      "usableRepos": 497,
+      "truncatedExcluded": 3,
+      "prevalenceAuto": {
+        "k": 127,
+        "n": 497,
+        "pct": 25.55,
+        "ci95": [
+          21.92,
+          29.57
+        ]
+      },
+      "manualOnly": {
+        "k": 1,
+        "n": 497,
+        "pct": 0.2,
+        "ci95": [
+          0.04,
+          1.13
+        ]
+      },
+      "codeownersAdoption": {
+        "k": 22,
+        "n": 127,
+        "pct": 17.32,
+        "ci95": [
+          11.73,
+          24.84
+        ]
+      },
+      "fileCoverageGap": {
+        "k": 26,
+        "n": 135,
+        "pct": 19.26,
+        "ci95": [
+          13.5,
+          26.72
+        ],
+        "bootstrapCI95": [
+          5.71,
+          41.67
+        ]
+      },
+      "repoCoverageGap": {
+        "k": 8,
+        "n": 22,
+        "pct": 36.36,
+        "ci95": [
+          19.73,
+          57.05
+        ]
+      },
+      "rootUncovered": {
+        "k": 9,
+        "n": 24,
+        "pct": 37.5,
+        "ci95": [
+          21.16,
+          57.29
+        ]
+      },
+      "nestedUncovered": {
+        "k": 17,
+        "n": 111,
+        "pct": 15.32,
+        "ci95": [
+          9.79,
+          23.16
+        ]
+      }
+    }
+  }
+}

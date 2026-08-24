@@ -1,0 +1,103 @@
+version: 0.1.0
+verified: '2026-08-11'
+formats:
+- family: agents
+  patterns:
+  - AGENTS.md
+  activation: native-auto
+  note: The standard. 60,000+ repositories. AAIF project under the Linux Foundation.
+  scope: any-depth
+- family: agents
+  patterns:
+  - AGENT.md
+  activation: legacy
+  note: Amp's original singular name, May 2025. Still present in older repos.
+  scope: any-depth
+- family: agents-override
+  patterns:
+  - AGENTS.override.md
+  activation: native-auto
+  note: Codex-specific. REPLACES parent instructions instead of extending them.
+  scope: any-depth
+- family: claude
+  patterns:
+  - CLAUDE.md
+  - CLAUDE.local.md
+  activation: native-auto
+  note: Claude Code. Does NOT read AGENTS.md.
+  scope: any-depth
+- family: claude
+  patterns:
+  - .claude/rules/**/*.md
+  activation: native-auto
+  scope: anchored-subtree
+- family: gemini
+  patterns:
+  - GEMINI.md
+  activation: native-auto
+  note: Gemini CLI's own file. Reads AGENTS.md only if configured to.
+  scope: any-depth
+- family: cursor
+  patterns:
+  - .cursorrules
+  activation: legacy
+  scope: any-depth
+- family: cursor
+  patterns:
+  - .cursor/rules/**/*.mdc
+  activation: native-auto
+  note: Auto-discovered in root and subdirectories.
+  scope: anchored-subtree
+- family: copilot
+  patterns:
+  - .github/copilot-instructions.md
+  activation: native-auto
+  note: Coding agent native. VS Code default-on via chat.useAgentsMdFile.
+  scope: repo-root
+- family: copilot
+  patterns:
+  - .github/instructions/**/*.instructions.md
+  activation: native-auto
+  scope: anchored-subtree
+- family: devin
+  patterns:
+  - .devin/rules/**
+  activation: native-auto
+  note: Devin Desktop, formerly Windsurf (renamed 2 June 2026). Case-insensitive matching.
+  scope: anchored-subtree
+- family: windsurf
+  patterns:
+  - .windsurfrules
+  activation: legacy
+  note: Pre-rename Windsurf.
+  scope: any-depth
+- family: windsurf
+  patterns:
+  - .windsurf/rules/**/*.md
+  activation: native-auto
+  note: Modern Windsurf rules directory (workspace and subdirs).
+  scope: anchored-subtree
+- family: cline
+  patterns:
+  - .clinerules
+  - .clinerules/*.md
+  activation: native-auto
+  scope: any-depth
+- family: goose
+  patterns:
+  - .goosehints
+  - .goose/**/*.md
+  activation: unknown
+  scope: any-depth
+- family: continue
+  patterns:
+  - .continue/rules/*.md
+  - .continuerules
+  activation: unknown
+  scope: anchored-subtree
+- family: aider
+  patterns:
+  - CONVENTIONS.md
+  activation: manual
+  note: Loaded only via --read or /read. Not auto-discovered. Expected negative control.
+  scope: any-depth

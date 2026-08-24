@@ -1,0 +1,29 @@
+total records: 500 across 1 (stratum/language) groups
+
+=== active/Python ===
+  usable repositories (excl. truncated/error): 496
+  excluded, truncated tree: 4
+
+ RQ1 prevalence (auto-loaded formats only)
+  repositories with an auto instruction file   171/496  (34.5%, 95% CI 30.4-38.8)
+  repos with ONLY a manual instruction file    1/496  (0.2%, 95% CI 0.0-1.1)
+    family claude                     1319
+    family agents                     350
+    family cursor                     44
+    family copilot                    37
+    family gemini                     6
+    family windsurf                   2
+    family cline                      1
+
+ RQ2 review coverage
+  repos w/ instructions that have CODEOWNERS   53/171  (31.0%, 95% CI 24.5-38.3)
+  instruction files OUTSIDE CODEOWNERS coverage 183/857  (21.4%, 95% CI 18.7-24.2)
+      bootstrap-by-repo 95% CI: 8.6-42.8
+  repos with >=1 uncovered instruction         17/53  (32.1%, 95% CI 21.1-45.5)
+
+ RQ2b coverage by depth
+  root-level files uncovered                   28/80  (35.0%, 95% CI 25.5-45.9)
+  nested files uncovered                       155/777  (19.9%, 95% CI 17.3-22.9)
+
+Per (stratum, language). Do not pool across languages without calling it
+an equal-weight stratified estimate. See docs/methodology.md.

@@ -1,0 +1,329 @@
+version: 0.1.0
+verified: '2026-08-11'
+harnesses:
+- id: codex-cli
+  name: OpenAI Codex CLI
+  open_source: true
+  reads:
+  - AGENTS.md
+  - AGENTS.override.md
+  walks_tree: true
+  walks_ancestors: true
+  respects_ignore: unknown
+  precedence: nearest-first
+  max_doc_bytes: 32768
+  confidence: documented
+  source: Codex docs
+  note: Codex combines instruction files from repo root down to the working directory. AGENTS.override.md wins only within its own directory; it does not delete a root-level instruction. 32 KiB default truncation.
+  claims:
+    root_loading:
+      value: true
+      confidence: documented
+    nested_loading:
+      value: true
+      confidence: documented
+    ancestor_loading:
+      value: true
+      confidence: documented
+    ignore_behavior:
+      value: unknown
+      confidence: unknown
+    override_semantics:
+      value: combine-root-to-cwd; override wins within a directory, does not delete ancestors
+      confidence: documented
+- id: claude-code
+  name: Claude Code
+  open_source: false
+  reads:
+  - CLAUDE.md
+  - CLAUDE.local.md
+  walks_tree: true
+  walks_ancestors: true
+  respects_ignore: unknown
+  precedence: nearest-first
+  confidence: documented
+  source: vendor docs
+  note: Does not read AGENTS.md.
+  claims:
+    root_loading:
+      value: true
+      confidence: documented
+    nested_loading:
+      value: true
+      confidence: documented
+    ancestor_loading:
+      value: true
+      confidence: documented
+    ignore_behavior:
+      value: unknown
+      confidence: unknown
+    override_semantics:
+      value: unknown
+      confidence: unknown
+- id: gemini-cli
+  name: Gemini CLI
+  open_source: true
+  reads:
+  - GEMINI.md
+  walks_tree: true
+  walks_ancestors: true
+  respects_ignore: documented
+  precedence: nearest-first
+  confidence: documented
+  source: Gemini CLI docs
+  note: Reads AGENTS.md only via settings.json. Respects ignore rules.
+  claims:
+    root_loading:
+      value: true
+      confidence: documented
+    nested_loading:
+      value: true
+      confidence: documented
+    ancestor_loading:
+      value: true
+      confidence: documented
+    ignore_behavior:
+      value: documented
+      confidence: documented
+    override_semantics:
+      value: unknown
+      confidence: unknown
+- id: cursor
+  name: Cursor
+  open_source: false
+  reads:
+  - .cursor/rules
+  - .cursorrules
+  - AGENTS.md
+  walks_tree: true
+  walks_ancestors: false
+  respects_ignore: unknown
+  precedence: nearest-first
+  confidence: documented
+  source: Cursor docs
+  claims:
+    root_loading:
+      value: true
+      confidence: documented
+    nested_loading:
+      value: true
+      confidence: documented
+    ancestor_loading:
+      value: false
+      confidence: documented
+    ignore_behavior:
+      value: unknown
+      confidence: unknown
+    override_semantics:
+      value: unknown
+      confidence: unknown
+- id: copilot
+  name: GitHub Copilot
+  open_source: false
+  reads:
+  - .github/copilot-instructions.md
+  - AGENTS.md
+  walks_tree: false
+  walks_ancestors: false
+  respects_ignore: not-applicable
+  precedence: root-only
+  confidence: documented
+  source: GitHub / VS Code docs
+  note: VS Code default-on via chat.useAgentsMdFile.
+  claims:
+    root_loading:
+      value: true
+      confidence: documented
+    nested_loading:
+      value: false
+      confidence: documented
+    ancestor_loading:
+      value: false
+      confidence: documented
+    ignore_behavior:
+      value: not-applicable
+      confidence: documented
+    override_semantics:
+      value: unknown
+      confidence: unknown
+- id: devin-desktop
+  name: Devin Desktop
+  open_source: false
+  reads:
+  - .devin/rules
+  - AGENTS.md
+  walks_tree: true
+  walks_ancestors: unknown
+  respects_ignore: unknown
+  precedence: nearest-first
+  case_insensitive: true
+  confidence: documented
+  source: Devin docs
+  note: Formerly Windsurf. Case-insensitive matching.
+  claims:
+    root_loading:
+      value: true
+      confidence: documented
+    nested_loading:
+      value: true
+      confidence: documented
+    ancestor_loading:
+      value: false
+      confidence: unknown
+    ignore_behavior:
+      value: unknown
+      confidence: unknown
+    override_semantics:
+      value: unknown
+      confidence: unknown
+- id: amp
+  name: Amp
+  open_source: false
+  reads:
+  - AGENTS.md
+  - AGENT.md
+  walks_tree: false
+  walks_ancestors: false
+  respects_ignore: unknown
+  precedence: unknown
+  confidence: documented
+  source: Amp docs
+  note: Created the AGENT.md predecessor; adopted AGENTS.md 20 Aug 2025.
+  claims:
+    root_loading:
+      value: true
+      confidence: documented
+    nested_loading:
+      value: false
+      confidence: unknown
+    ancestor_loading:
+      value: false
+      confidence: unknown
+    ignore_behavior:
+      value: unknown
+      confidence: unknown
+    override_semantics:
+      value: unknown
+      confidence: unknown
+- id: goose
+  name: goose
+  open_source: true
+  reads:
+  - .goosehints
+  walks_tree: false
+  walks_ancestors: false
+  respects_ignore: unknown
+  precedence: root-only
+  confidence: unknown
+  source: not yet verified
+  claims:
+    root_loading:
+      value: true
+      confidence: unknown
+    nested_loading:
+      value: false
+      confidence: unknown
+    ancestor_loading:
+      value: false
+      confidence: unknown
+    ignore_behavior:
+      value: unknown
+      confidence: unknown
+    override_semantics:
+      value: unknown
+      confidence: unknown
+- id: cline
+  name: Cline
+  open_source: true
+  reads:
+  - .clinerules
+  walks_tree: false
+  walks_ancestors: false
+  respects_ignore: unknown
+  precedence: root-only
+  confidence: inferred
+  source: repository
+  claims:
+    root_loading:
+      value: true
+      confidence: inferred
+    nested_loading:
+      value: false
+      confidence: unknown
+    ancestor_loading:
+      value: false
+      confidence: unknown
+    ignore_behavior:
+      value: unknown
+      confidence: unknown
+    override_semantics:
+      value: unknown
+      confidence: unknown
+- id: continue
+  name: Continue
+  open_source: true
+  reads:
+  - .continue/rules
+  walks_tree: false
+  walks_ancestors: false
+  respects_ignore: unknown
+  precedence: root-only
+  confidence: unknown
+  source: not yet verified
+  claims:
+    root_loading:
+      value: true
+      confidence: unknown
+    nested_loading:
+      value: false
+      confidence: unknown
+    ancestor_loading:
+      value: false
+      confidence: unknown
+    ignore_behavior:
+      value: unknown
+      confidence: unknown
+    override_semantics:
+      value: unknown
+      confidence: unknown
+- id: aider
+  name: aider
+  open_source: true
+  reads:
+  - CONVENTIONS.md
+  walks_tree: false
+  walks_ancestors: false
+  respects_ignore: not-applicable
+  precedence: explicit-only
+  confidence: documented
+  source: aider docs
+  note: Manual load only. Negative control.
+  claims:
+    root_loading:
+      value: false
+      confidence: documented
+    nested_loading:
+      value: false
+      confidence: documented
+    ancestor_loading:
+      value: false
+      confidence: documented
+    ignore_behavior:
+      value: not-applicable
+      confidence: documented
+    override_semantics:
+      value: unknown
+      confidence: unknown
+vendor_markers:
+- node_modules
+- vendor
+- third_party
+- thirdparty
+- site-packages
+- dist-packages
+- .venv
+- venv
+- Pods
+- bower_components
+- go/pkg/mod
+- .cargo/registry

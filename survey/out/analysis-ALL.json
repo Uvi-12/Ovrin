@@ -1,0 +1,361 @@
+{
+  "totalRecords": 2500,
+  "groups": {
+    "active/Go": {
+      "usableRepos": 494,
+      "truncatedExcluded": 6,
+      "prevalenceAuto": {
+        "k": 250,
+        "n": 494,
+        "pct": 50.61,
+        "ci95": [
+          46.21,
+          54.99
+        ]
+      },
+      "manualOnly": {
+        "k": 0,
+        "n": 494,
+        "pct": 0.0,
+        "ci95": [
+          0.0,
+          0.77
+        ]
+      },
+      "codeownersAdoption": {
+        "k": 80,
+        "n": 250,
+        "pct": 32.0,
+        "ci95": [
+          26.53,
+          38.02
+        ]
+      },
+      "fileCoverageGap": {
+        "k": 142,
+        "n": 577,
+        "pct": 24.61,
+        "ci95": [
+          21.27,
+          28.29
+        ],
+        "bootstrapCI95": [
+          11.6,
+          40.47
+        ]
+      },
+      "repoCoverageGap": {
+        "k": 19,
+        "n": 80,
+        "pct": 23.75,
+        "ci95": [
+          15.76,
+          34.14
+        ]
+      },
+      "rootUncovered": {
+        "k": 28,
+        "n": 115,
+        "pct": 24.35,
+        "ci95": [
+          17.42,
+          32.94
+        ]
+      },
+      "nestedUncovered": {
+        "k": 114,
+        "n": 462,
+        "pct": 24.68,
+        "ci95": [
+          20.96,
+          28.8
+        ]
+      }
+    },
+    "active/Java": {
+      "usableRepos": 487,
+      "truncatedExcluded": 11,
+      "prevalenceAuto": {
+        "k": 152,
+        "n": 487,
+        "pct": 31.21,
+        "ci95": [
+          27.26,
+          35.46
+        ]
+      },
+      "manualOnly": {
+        "k": 1,
+        "n": 487,
+        "pct": 0.21,
+        "ci95": [
+          0.04,
+          1.15
+        ]
+      },
+      "codeownersAdoption": {
+        "k": 41,
+        "n": 152,
+        "pct": 26.97,
+        "ci95": [
+          20.55,
+          34.53
+        ]
+      },
+      "fileCoverageGap": {
+        "k": 168,
+        "n": 463,
+        "pct": 36.29,
+        "ci95": [
+          32.03,
+          40.76
+        ],
+        "bootstrapCI95": [
+          10.33,
+          61.09
+        ]
+      },
+      "unreadableCodeowners": 1,
+      "repoCoverageGap": {
+        "k": 9,
+        "n": 41,
+        "pct": 21.95,
+        "ci95": [
+          12.0,
+          36.71
+        ]
+      },
+      "rootUncovered": {
+        "k": 11,
+        "n": 48,
+        "pct": 22.92,
+        "ci95": [
+          13.31,
+          36.54
+        ]
+      },
+      "nestedUncovered": {
+        "k": 157,
+        "n": 415,
+        "pct": 37.83,
+        "ci95": [
+          33.3,
+          42.59
+        ]
+      }
+    },
+    "active/JavaScript": {
+      "usableRepos": 497,
+      "truncatedExcluded": 3,
+      "prevalenceAuto": {
+        "k": 127,
+        "n": 497,
+        "pct": 25.55,
+        "ci95": [
+          21.92,
+          29.57
+        ]
+      },
+      "manualOnly": {
+        "k": 1,
+        "n": 497,
+        "pct": 0.2,
+        "ci95": [
+          0.04,
+          1.13
+        ]
+      },
+      "codeownersAdoption": {
+        "k": 22,
+        "n": 127,
+        "pct": 17.32,
+        "ci95": [
+          11.73,
+          24.84
+        ]
+      },
+      "fileCoverageGap": {
+        "k": 26,
+        "n": 135,
+        "pct": 19.26,
+        "ci95": [
+          13.5,
+          26.72
+        ],
+        "bootstrapCI95": [
+          5.71,
+          41.67
+        ]
+      },
+      "repoCoverageGap": {
+        "k": 8,
+        "n": 22,
+        "pct": 36.36,
+        "ci95": [
+          19.73,
+          57.05
+        ]
+      },
+      "rootUncovered": {
+        "k": 9,
+        "n": 24,
+        "pct": 37.5,
+        "ci95": [
+          21.16,
+          57.29
+        ]
+      },
+      "nestedUncovered": {
+        "k": 17,
+        "n": 111,
+        "pct": 15.32,
+        "ci95": [
+          9.79,
+          23.16
+        ]
+      }
+    },
+    "active/Python": {
+      "usableRepos": 496,
+      "truncatedExcluded": 4,
+      "prevalenceAuto": {
+        "k": 171,
+        "n": 496,
+        "pct": 34.48,
+        "ci95": [
+          30.43,
+          38.76
+        ]
+      },
+      "manualOnly": {
+        "k": 1,
+        "n": 496,
+        "pct": 0.2,
+        "ci95": [
+          0.04,
+          1.13
+        ]
+      },
+      "codeownersAdoption": {
+        "k": 53,
+        "n": 171,
+        "pct": 30.99,
+        "ci95": [
+          24.54,
+          38.28
+        ]
+      },
+      "fileCoverageGap": {
+        "k": 183,
+        "n": 857,
+        "pct": 21.35,
+        "ci95": [
+          18.74,
+          24.22
+        ],
+        "bootstrapCI95": [
+          8.6,
+          42.84
+        ]
+      },
+      "repoCoverageGap": {
+        "k": 17,
+        "n": 53,
+        "pct": 32.08,
+        "ci95": [
+          21.09,
+          45.48
+        ]
+      },
+      "rootUncovered": {
+        "k": 28,
+        "n": 80,
+        "pct": 35.0,
+        "ci95": [
+          25.45,
+          45.92
+        ]
+      },
+      "nestedUncovered": {
+        "k": 155,
+        "n": 777,
+        "pct": 19.95,
+        "ci95": [
+          17.29,
+          22.9
+        ]
+      }
+    },
+    "active/Rust": {
+      "usableRepos": 497,
+      "truncatedExcluded": 3,
+      "prevalenceAuto": {
+        "k": 261,
+        "n": 497,
+        "pct": 52.52,
+        "ci95": [
+          48.12,
+          56.87
+        ]
+      },
+      "manualOnly": {
+        "k": 0,
+        "n": 497,
+        "pct": 0.0,
+        "ci95": [
+          0.0,
+          0.77
+        ]
+      },
+      "codeownersAdoption": {
+        "k": 63,
+        "n": 261,
+        "pct": 24.14,
+        "ci95": [
+          19.35,
+          29.68
+        ]
+      },
+      "fileCoverageGap": {
+        "k": 78,
+        "n": 501,
+        "pct": 15.57,
+        "ci95": [
+          12.66,
+          19.0
+        ],
+        "bootstrapCI95": [
+          7.11,
+          26.96
+        ]
+      },
+      "repoCoverageGap": {
+        "k": 19,
+        "n": 63,
+        "pct": 30.16,
+        "ci95": [
+          20.24,
+          42.36
+        ]
+      },
+      "rootUncovered": {
+        "k": 24,
+        "n": 91,
+        "pct": 26.37,
+        "ci95": [
+          18.41,
+          36.25
+        ]
+      },
+      "nestedUncovered": {
+        "k": 54,
+        "n": 410,
+        "pct": 13.17,
+        "ci95": [
+          10.24,
+          16.79
+        ]
+      }
+    }
+  }
+}

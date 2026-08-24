@@ -1,0 +1,77 @@
+{
+  "totalRecords": 500,
+  "groups": {
+    "active/Java": {
+      "usableRepos": 487,
+      "truncatedExcluded": 11,
+      "prevalenceAuto": {
+        "k": 152,
+        "n": 487,
+        "pct": 31.21,
+        "ci95": [
+          27.26,
+          35.46
+        ]
+      },
+      "manualOnly": {
+        "k": 1,
+        "n": 487,
+        "pct": 0.21,
+        "ci95": [
+          0.04,
+          1.15
+        ]
+      },
+      "codeownersAdoption": {
+        "k": 41,
+        "n": 152,
+        "pct": 26.97,
+        "ci95": [
+          20.55,
+          34.53
+        ]
+      },
+      "fileCoverageGap": {
+        "k": 168,
+        "n": 463,
+        "pct": 36.29,
+        "ci95": [
+          32.03,
+          40.76
+        ],
+        "bootstrapCI95": [
+          10.33,
+          61.09
+        ]
+      },
+      "unreadableCodeowners": 1,
+      "repoCoverageGap": {
+        "k": 9,
+        "n": 41,
+        "pct": 21.95,
+        "ci95": [
+          12.0,
+          36.71
+        ]
+      },
+      "rootUncovered": {
+        "k": 11,
+        "n": 48,
+        "pct": 22.92,
+        "ci95": [
+          13.31,
+          36.54
+        ]
+      },
+      "nestedUncovered": {
+        "k": 157,
+        "n": 415,
+        "pct": 37.83,
+        "ci95": [
+          33.3,
+          42.59
+        ]
+      }
+    }
+  }
+}
