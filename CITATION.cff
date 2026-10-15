@@ -1,10 +1,16 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it."
-title: "Ovrin: an inventory for agent instruction files"
+title: "Ovrin: provenance-aware instruction inventory for AI coding agents"
 authors:
   - family-names: Pradhan
     given-names: Yuvraj
+  - family-names: Pradhan
+    given-names: Abhishek
+  - family-names: Singh
+    given-names: Aman
+  - family-names: Kumari
+    given-names: Archana
 version: 0.1.0
-date-released: 2026-08
+date-released: 2026-09
 license: Apache-2.0
-repository-code: "https://github.com/OWNER/ovrin"
+repository-code: "https://github.com/Uvi-12/ovrin"

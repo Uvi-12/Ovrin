@@ -1,0 +1,17 @@
+version: 1
+default:
+  instruction: false
+delegations:
+  - source: "repo:default"
+    authority:
+      instruction: true
+  - source: "pkg:npm/iad-eval-policy-pack@*"
+    context:
+      paths: ["config/security/**", ".github/workflows/**"]
+    authority:
+      instruction: false
+  - source: "unknown:node_modules/iad-eval-policy-pack/CLAUDE.md"
+    context:
+      paths: ["config/security/**", ".github/workflows/**"]
+    authority:
+      instruction: false

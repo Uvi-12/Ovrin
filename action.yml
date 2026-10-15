@@ -1,0 +1,37 @@
+name: "Ovrin instruction scan"
+description: "Inventory AI coding-agent instruction files; fail on unreviewed or third-party ones."
+branding:
+  icon: "shield"
+  color: "purple"
+inputs:
+  path:
+    description: "Directory to scan"
+    default: "."
+  fail-on-third-party:
+    description: "Fail the build if any instruction file is third-party"
+    default: "true"
+  fail-on-unreviewed:
+    description: "Fail the build if any instruction file lacks enforced review"
+    default: "false"
+  manifest-path:
+    description: "Where to write the JSON provenance manifest"
+    default: "ovrin-manifest.json"
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - name: Install Ovrin
+      shell: bash
+      run: pip install "${{ github.action_path }}"
+    - name: Scan and publish the manifest
+      shell: bash
+      run: ovrin scan "${{ inputs.path }}" -f json -o "${{ inputs.manifest-path }}"
+    - name: Gate on provenance
+      shell: bash
+      run: |
+        args=()
+        [ "${{ inputs.fail-on-third-party }}" = "true" ] && args+=(--fail-on-third-party)
+        [ "${{ inputs.fail-on-unreviewed }}" = "true" ] && args+=(--fail-on-unreviewed)
+        ovrin scan "${{ inputs.path }}" "${args[@]}"

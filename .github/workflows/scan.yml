@@ -1,0 +1,30 @@
+# Drop-in Ovrin gate: inventory instruction files and fail the build if any
+# are unreviewed or arrive from a third-party dependency.
+name: ovrin-instruction-scan
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  ovrin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0            # Ovrin reads git history for provenance
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Ovrin
+        run: pip install .
+      - name: Scan and publish the manifest
+        run: ovrin scan . -f json -o ovrin-manifest.json
+      - name: Fail on unreviewed or third-party instruction files
+        run: ovrin scan . --fail-on-unreviewed --fail-on-third-party
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ovrin-manifest
+          path: ovrin-manifest.json

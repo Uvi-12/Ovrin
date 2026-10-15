@@ -1,0 +1,13 @@
+version: 1
+default:
+  instruction: false
+delegations:
+  - source: "repo:default"
+    authority:
+      instruction: true
+  # lint-helper is NOT delegated over .github/workflows/**
+  - source: "pkg:npm/lint-helper@*"
+    context:
+      paths: [".github/workflows/**", "config/security/**"]
+    authority:
+      instruction: false

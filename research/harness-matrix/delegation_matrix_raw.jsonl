@@ -1,0 +1,8 @@
+{"gate": "delegation", "cell": "Cell 1 (first-party, covered, delegated)", "origin": "repo", "enforceable": true, "delegated": true, "expected_action": "ALLOW", "N": 50, "delegation_gate_agree": 50, "delegation_gate_disagree": 0}
+{"gate": "delegation", "cell": "Cell 2 (third-party, covered, NOT delegated)", "origin": "installed-dependency", "enforceable": true, "delegated": false, "expected_action": "BLOCK", "N": 50, "delegation_gate_agree": 50, "delegation_gate_disagree": 0}
+{"gate": "delegation", "cell": "Cell 3 (third-party, uncovered, delegated)", "origin": "installed-dependency", "enforceable": null, "delegated": true, "expected_action": "ALLOW", "N": 50, "delegation_gate_agree": 50, "delegation_gate_disagree": 0}
+{"gate": "delegation", "cell": "Cell 4 (third-party, uncovered, NOT delegated)", "origin": "installed-dependency", "enforceable": null, "delegated": false, "expected_action": "BLOCK", "N": 50, "delegation_gate_agree": 50, "delegation_gate_disagree": 0}
+{"gate": "static-baseline", "cell": "Cell 1 (first-party, covered, delegated)", "expected_action": "ALLOW", "N": 50, "static_gate_agree": 50, "static_gate_disagree": 0}
+{"gate": "static-baseline", "cell": "Cell 2 (third-party, covered, NOT delegated)", "expected_action": "BLOCK", "N": 50, "static_gate_agree": 0, "static_gate_disagree": 50}
+{"gate": "static-baseline", "cell": "Cell 3 (third-party, uncovered, delegated)", "expected_action": "ALLOW", "N": 50, "static_gate_agree": 0, "static_gate_disagree": 50}
+{"gate": "static-baseline", "cell": "Cell 4 (third-party, uncovered, NOT delegated)", "expected_action": "BLOCK", "N": 50, "static_gate_agree": 50, "static_gate_disagree": 0}

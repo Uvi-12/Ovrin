@@ -1,0 +1,16 @@
+{
+  "services": [
+    {
+      "name": "auth",
+      "hosts": [
+        "auth.example.com"
+      ]
+    },
+    {
+      "name": "billing-legacy",
+      "hosts": [
+        "billing.example.com"
+      ]
+    }
+  ]
+}

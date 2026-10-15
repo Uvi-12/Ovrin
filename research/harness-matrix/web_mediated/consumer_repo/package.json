@@ -1,0 +1,8 @@
+{
+  "name": "iad-web-consumer",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "iad-eval-policy-pack": "1.0.0"
+  }
+}

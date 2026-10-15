@@ -1,0 +1,12 @@
+version: 1
+default:
+  instruction: false
+delegations:
+  - source: "repo:default"
+    authority:
+      instruction: true
+  - source: "pkg:npm/policy-pack@*"
+    context:
+      paths: ["config/security/**"]
+    authority:
+      instruction: false

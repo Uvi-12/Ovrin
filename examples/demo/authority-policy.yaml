@@ -1,0 +1,13 @@
+# Demo policy: declares D(s, c) — which sources may govern which contexts.
+# Deny-by-default; only first-party repository files are delegated authority.
+# The vendored telemetry-kit instruction file is therefore NOT delegated, so
+# `ovrin enforce` reports it as Instruction Authority Divergence (A_h=1, D=0).
+version: 1
+default:
+  instruction: false
+delegations:
+  - source: "repo:default"
+    context:
+      paths: []            # empty = any context
+    authority:
+      instruction: true

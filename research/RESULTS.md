@@ -14,7 +14,7 @@ not bound by any common primitive, and harnesses resolve them differently.
 ---
 
 ## RQ1 / RQ2 — prevalence & governance gap (2,470 repos, pooled)
-- Prevalence 38.1% | file-gap 30.5% | repo-gap 27.6%. (survey/out/)
+- Prevalence 38.1% | file-gap 30.5% | repo-gap 27.7%. (survey/out/)
 
 ## the carriage study — carriage gradient (verified vs results files)
 Third-party instruction-file carriage, by ecosystem:
@@ -121,7 +121,6 @@ built (weaponization the author declines).
 
 ## Disclosure
 the import-carriage mechanism @import cross-boundary + the workspace-trust experiment + bounds responsibly disclosed to Anthropic
-2026-08-13 (research/disclosure/ANTHROPIC-seam1-import.md; record in
-research/disclosure/SENT.md). Claude-Code-specific reproduction withheld from public
+2026-08-13 (coordinated-disclosure records kept privately, outside this public tree). Claude-Code-specific reproduction withheld from public
 release pending a reasonable disclosure window. General phenomenon (the carriage study, provenance≠
 authority, Codex documented precedence, the dependency-depth analysis/3) publishable now.

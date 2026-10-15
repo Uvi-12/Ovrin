@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "ovrin",
+          "version": "0.1.0",
+          "informationUri": "https://github.com/Uvi-12/ovrin",
+          "rules": [
+            {
+              "id": "IAD-IMPORT_DELEGATION-FLAG",
+              "name": "InstructionAuthorityDivergence/ImportDelegation",
+              "shortDescription": {
+                "text": "First-party instruction file delegates authority to an unreviewed third-party source via @import"
+              },
+              "properties": {
+                "tags": [
+                  "supply-chain",
+                  "agent-security",
+                  "import-delegation"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "IAD-IMPORT_DELEGATION-FLAG",
+          "level": "warning",
+          "message": {
+            "text": "@import 'config/policy/service-catalog.md' resolves to 'config/policy/service-catalog.md' which is not a known instruction file"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "CLAUDE.md"
+                }
+              }
+            }
+          ],
+          "properties": {
+            "importTarget": "config/policy/service-catalog.md",
+            "resolvedTarget": "config/policy/service-catalog.md",
+            "targetOriginClass": null,
+            "importChainComplete": false
+          }
+        }
+      ],
+      "properties": {
+        "harness": "claude-code",
+        "blocked": 0,
+        "flagged": 0,
+        "warned": 0,
+        "lowConfidenceDecisions": 0,
+        "unresolvedImportChains": 1
+      }
+    }
+  ]
+}

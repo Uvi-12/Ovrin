@@ -1,0 +1,13 @@
+name: security-scan
+on: [push, pull_request]
+jobs:
+  static-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./scripts/run-static-analysis.sh
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./scripts/run-secret-scan.sh

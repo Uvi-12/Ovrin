@@ -1,0 +1,18 @@
+[1mAgent instruction manifest[0m
+  subject      /workspace/ovrin/research/harness-matrix/web_mediated/consumer_repo
+  codeowners   CODEOWNERS
+  rules        harnesses v0.1.0 (verified 2026-08-11)
+
+[2m  PATH                                         ORIGIN                REVIEW       LOADED BY[0m
+  CLAUDE.md                                    [32mrepo                [0m  [33mno[0m           claude-code
+  node_modules/iad-eval-policy-pack/CLAUDE.md  [31minstalled-dependency[0m  [33mno[0m           - (?claude-code)
+
+[1mSummary[0m
+  instruction files    2
+  third-party origin   [31m1[0m
+  not review-enforced  [33m2[0m
+  first commit by author  1
+  git-ignored path     1
+
+[2m  '?' marks a harness whose behaviour we have not verified.[0m
+[2m  See docs/loading-matrix.md before citing any verdict.[0m

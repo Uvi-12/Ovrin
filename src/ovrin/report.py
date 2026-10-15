@@ -22,7 +22,7 @@ def render(m: dict[str, Any], color: bool | None = None) -> str:
     o.append(f"  subject      {subj['path']}")
     o.append(f"  codeowners   {subj['codeownersPath'] or _c('none found', YEL, color)}")
     o.append(f"  rules        harnesses v{m['harnessRules']['version']} "
-             f"(verified {m['harnessRules']['verified']})")
+             f"(matrix dated {m['harnessRules']['verified']}, documented)")
     o.append("")
     if not m["instructions"]:
         o.append("  No agent instruction files found.")

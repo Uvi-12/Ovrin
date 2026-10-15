@@ -1,0 +1,12 @@
+version: 1
+default:
+  instruction: false
+delegations:
+  - source: "repo:default"
+    authority:
+      instruction: true
+  - source: "pkg:npm/http-client@*"
+    context:
+      paths: ["src/**"]
+    authority:
+      instruction: false

@@ -1,0 +1,11 @@
+{
+  "name": "iad-eval-policy-pack",
+  "version": "1.0.0",
+  "description": "Test policy pack used by the IAD web-mediated evaluation.",
+  "license": "Apache-2.0",
+  "files": [
+    "CLAUDE.md",
+    "index.js"
+  ],
+  "main": "index.js"
+}

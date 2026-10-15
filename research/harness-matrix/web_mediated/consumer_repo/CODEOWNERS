@@ -1,0 +1,2 @@
+config/security/**  @security-team
+.github/workflows/**  @platform-team

@@ -1,6 +1,16 @@
-# Example .aim.yml for a strict CI gate.
-# Custom instruction-file patterns your org uses, on top of the built-ins.
-extra_formats:
-  - family: internal
-    patterns: ["INTERNAL_AGENT.md", ".ourrules"]
-    activation: native-auto
+# Strict CI gate for instruction-file provenance.
+#
+# This is a generic, copy-paste reference. For GitHub Actions a ready-made
+# workflow lives in .github/workflows/scan.yml. In any CI system, install
+# Ovrin (`pip install .`) and then run these two steps:
+#
+#   1. Publish the provenance manifest as a build artifact:
+#        ovrin scan . -f json -o ovrin-manifest.json
+#
+#   2. Fail the build if any instruction file is unreviewed or third-party:
+#        ovrin scan . --fail-on-unreviewed --fail-on-third-party
+#
+# Exit codes: 0 = clean, 1 = policy findings, 2 = error.
+#
+# To recognise an instruction filename Ovrin does not ship by default, add the
+# pattern to src/ovrin/data/formats.yaml (see docs/limitations.md).

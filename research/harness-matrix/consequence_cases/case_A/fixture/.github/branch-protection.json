@@ -1,0 +1,5 @@
+{
+  "protected_branch": "main",
+  "required_reviewers_from_codeowners": true,
+  "enforce_admins": true
+}

@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.eggs/
+
+# Virtualenvs
+.venv/
+venv/
+env/
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Local packaging lock (regenerate as needed)
+# uv.lock
+
+# Survey raw output is regenerated from the frozen seed (see RUN.md);
+# only aggregate analysis-*.json is tracked.
+survey/out/records-*.jsonl
+survey/out/sample-*.json
+survey/out/SMOKE-records.jsonl
+survey/out/SMOKE-sample.json

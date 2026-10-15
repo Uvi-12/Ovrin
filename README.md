@@ -19,7 +19,7 @@ The carrier does not need a stolen token, a prompt injection, or code execution.
 ## See it in 20 seconds
 
 ```
-pip install ovrin
+git clone https://github.com/Uvi-12/ovrin && cd ovrin && pip install .
 ovrin scan .
 ```
 
@@ -52,13 +52,15 @@ The two third-party rows are the point. Neither file was written by this project
 ## Install
 
 ```
-pip install ovrin
+git clone https://github.com/Uvi-12/ovrin
+cd ovrin
+pip install .
 ```
 
-That is the whole install. The scanner runs offline and makes no network calls. The optional survey tools pull one extra:
+That is the whole install (Ovrin is not yet published on PyPI under this name). The scanner runs offline and makes no network calls. The optional survey tools pull one extra:
 
 ```
-pip install "ovrin[survey]"
+pip install ".[survey]"
 ```
 
 ## Use it on your own project
@@ -78,6 +80,20 @@ ovrin scan . --fail-on-third-party   # exit 1 if any arrived from a dependency o
 ```
 
 A drop-in GitHub Actions workflow is in [`.github/workflows/scan.yml`](.github/workflows/scan.yml).
+
+## Enforce a provenance policy (experimental)
+
+`ovrin scan` reports; `ovrin enforce` can block. Given an `authority-policy.yaml`
+that declares which sources may govern which paths (the delegation relation
+`D(s, c)`), the gate blocks a third-party instruction file only when third-party
+origin, missing enforceable review, and high-confidence reachability coincide,
+and can emit table, JSON, or SARIF for code scanning:
+
+```
+ovrin enforce . --harness claude-code --policy authority-policy.yaml -f sarif -o ovrin.sarif
+```
+
+See `ovrin enforce --help` for the full set of flags.
 
 ## What the manifest records
 
@@ -117,6 +133,56 @@ Full account with sources: [`docs/related-work.md`](docs/related-work.md).
 - Not an agent sandbox or a runtime guard.
 - Not a claim that any agent is vulnerable. The matrix records behaviour, including the agents that behave conservatively.
 
+## Sign the manifest
+
+Ovrin's output is a provenance record, so it can be signed. The optional
+`[sign]` extra adds Ed25519 detached signatures:
+
+```
+pip install ".[sign]"
+ovrin keygen --out-dir .ovrin-keys
+ovrin scan . -f json --no-timestamp -o m.json
+ovrin sign m.json --key .ovrin-keys/ovrin-signing.key -o m.json.sig
+ovrin verify m.json --sig m.json.sig --pub .ovrin-keys/ovrin-signing.pub
+```
+
+A verifier holding the public key can confirm the manifest is unchanged and was
+produced by the key holder, but cannot forge one. See [`docs/signing.md`](docs/signing.md).
+
+## Use it in CI and your editor
+
+- **GitHub Action** — one step publishes the manifest and fails the build on
+  unreviewed or third-party instruction files:
+
+  ```yaml
+  - uses: Uvi-12/ovrin@v1
+    with:
+      fail-on-third-party: "true"
+  ```
+
+  A plain workflow is also in [`.github/workflows/scan.yml`](.github/workflows/scan.yml).
+
+- **pre-commit** — add to `.pre-commit-config.yaml`:
+
+  ```yaml
+  - repo: https://github.com/Uvi-12/ovrin
+    rev: v0.1.0
+    hooks:
+      - id: ovrin-scan
+  ```
+
+- **VS Code** — copy [`examples/editor/vscode-tasks.json`](examples/editor/vscode-tasks.json) into `.vscode/tasks.json`.
+
+## Try the demo
+
+```
+pip install ".[sign]"
+bash examples/demo/demo.sh
+```
+
+A 2-minute, self-contained walkthrough: scan → CI gate → SPDX → policy enforce
+→ sign. See [`examples/demo/`](examples/demo/).
+
 ## Documentation
 
 - [What an instruction file is, and why it is a dependency](docs/threat-model.md)
@@ -127,6 +193,7 @@ Full account with sources: [`docs/related-work.md`](docs/related-work.md).
 - [Survey methodology](docs/methodology.md)
 - [Related work](docs/related-work.md)
 - [Limitations](docs/limitations.md)
+- [Signing manifests](docs/signing.md)
 
 ## Contributing
 

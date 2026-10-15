@@ -5,7 +5,7 @@ Thanks for helping make agent instructions something a project can actually see.
 ## Getting set up
 
 ```
-git clone https://github.com/OWNER/ovrin
+git clone https://github.com/Uvi-12/ovrin
 cd ovrin
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"

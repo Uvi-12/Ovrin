@@ -1,0 +1,7 @@
+- id: ovrin-scan
+  name: ovrin instruction-file scan
+  description: Fail if any agent instruction file is unreviewed or third-party.
+  entry: ovrin scan . --fail-on-third-party
+  language: python
+  pass_filenames: false
+  always_run: true
