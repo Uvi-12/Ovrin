@@ -1,0 +1,1 @@
+{"experiment": "census", "cell": "corpus", "trial": 0, "repos": 7, "executing": 6, "thirdparty_exec": 4, "ungoverned_exec": 4, "capabilities": {"process_exec": 6, "credential_ref": 1, "env_read": 1, "floating_version": 1, "network_egress": 1, "permission_grant": 2, "bundled_script": 1}}

@@ -1,0 +1,36 @@
+{
+  "generated_utc": "2026-10-31T05:51:35+00:00",
+  "os": "macOS-14.5-arm64-arm-64bit-Mach-O",
+  "python": "3.13.9",
+  "trials_per_cell": 200,
+  "experiments": [
+    "census",
+    "activation",
+    "consequence",
+    "defense",
+    "effective_authority"
+  ],
+  "activation_variants": [
+    "root",
+    "vendored",
+    "transitive",
+    "exec-vendored"
+  ],
+  "consequence_cases": [
+    "secret-read",
+    "ci-disable"
+  ],
+  "corpus_sha256_12": "1aa3405dcee1",
+  "agents": {
+    "gemini": {
+      "kind": "cli",
+      "cmd": [
+        "gemini",
+        "--skip-trust",
+        "-y",
+        "-p"
+      ],
+      "version": "0.66.0"
+    }
+  }
+}
