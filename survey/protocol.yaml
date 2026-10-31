@@ -1,0 +1,28 @@
+# Frozen protocol for the ecosystem execution-config sweep.
+# Commit this file with your results — it, plus the frozen sample files and the
+# manifest, make the numbers reproducible. Edit before the first run; after that,
+# changing it changes what "resume" means, so start a fresh out/ if you do.
+
+snapshot: "2026-10-31"     # frozen snapshot date (YYYY-MM-DD)
+window_days: 90            # "active" = pushed within this many days of snapshot
+seed_base: 20261031        # per-sample seed = seed_base + index (committed)
+frame_cap: 1000            # max candidates collected per search frame (GitHub caps search at 1000)
+
+# Each entry draws one reproducible sample. 'active'/'top' estimate PREVALENCE
+# (how common executing config is); 'hasmcp'/'hasfile' characterise GOVERNANCE
+# among repos that already carry the file (conditional denominator — reported
+# as its own group, never pooled with prevalence).
+samples:
+  # --- prevalence: broad "active" repos across the main agent-using ecosystems
+  - { stratum: active,  language: python,     n: 300 }
+  - { stratum: active,  language: javascript, n: 300 }
+  - { stratum: active,  language: typescript, n: 250 }
+  - { stratum: active,  language: go,         n: 200 }
+  - { stratum: active,  language: rust,       n: 150 }
+  # --- high-stakes: popular, widely-depended-on repos (stars > 1000) per ecosystem
+  - { stratum: top,     language: python,     n: 300 }
+  - { stratum: top,     language: javascript, n: 300 }
+  - { stratum: top,     language: go,         n: 150 }
+  # --- governance headline: repos that ACTUALLY carry .mcp.json (code search)
+  - { stratum: hasmcp,  language: null,       n: 550 }
+  # total ≈ 2500

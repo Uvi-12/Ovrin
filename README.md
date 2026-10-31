@@ -1,53 +1,33 @@
-# OVRIN
+# Ovrin
 
-**Inventory the instruction files your coding agent silently obeys: AGENTS.md, CLAUDE.md, GEMINI.md, .cursorrules, and the rest.**
+**Know which configuration files your coding agent reads and runs — where each one came from, whether anyone reviewed it, and which agents will act on it.**
 
-![Version](https://img.shields.io/badge/version-0.1.0--alpha-6D4AFF)
+![Version](https://img.shields.io/badge/version-0.1.0-6D4AFF)
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Python](https://img.shields.io/badge/python-3.10%2B-3776AB)
 
 ---
 
-## The problem, in one sentence
+## What this is
 
-A coding agent reads files like `AGENTS.md` and `CLAUDE.md` as configuration and does what they say, but those files arrive through pull requests looking like documentation, sit outside the usual SBOM and lockfile tooling, and can be carried into your tree by a dependency you never read, so an instruction the agent obeys may be one nobody reviewed.
+Coding agents such as Claude Code, Codex, Cursor, and Gemini CLI read files in a
+repository as configuration and act on them. Some of those files only shape what
+the agent intends (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`). Others cause code to
+run when the agent starts — an MCP server definition in `.mcp.json`, a hook in
+`.claude/settings.json`. Either way, the file can enter a repository through a
+pull request that looks like documentation, or ride in on a dependency nobody
+read, and it sits outside the tooling teams already use to review code.
 
-The audit trail shows a reviewed pull request. The instruction the agent followed may never have been in it.
+Ovrin inventories those files and tells you, for each one:
 
-The carrier does not need a stolen token, a prompt injection, or code execution. It needs only a Markdown file on a path the agent walks, which a vendored dependency, a submodule, or an ordinary "add setup notes" pull request can all provide.
+- **where it came from** — written by the team, vendored in, or pulled in by a dependency;
+- **whether review is actually enforced on it** — not just that a `CODEOWNERS` line matches the path, but that it requires an approval;
+- **which agents will load it**, and what it is allowed to do (run a process, reach the network, read an environment variable, pin to a floating version).
 
-## See it in 20 seconds
+It then turns that inventory into a build gate you can run in CI, an
+SBOM-aligned manifest, and a signed, tamper-evident record.
 
-```
-git clone https://github.com/Uvi-12/ovrin && cd ovrin && pip install .
-ovrin scan .
-```
-
-`ovrin scan` walks the repository and prints one line per instruction file: where it came from, whether review is enforced on it, and which agents would load it.
-
-```
-Agent instruction manifest
-  subject      /work/example
-  codeowners   .github/CODEOWNERS
-  rules        harnesses v0.1.0 (verified 2026-08-11)
-
-  PATH                             ORIGIN                REVIEW       LOADED BY
-  .cursorrules                     repo                  enforced?    cursor
-  AGENTS.md                        repo                  enforced?    codex-cli,cursor,copilot,devin-desktop,amp
-  CLAUDE.md                        repo                  enforced?    claude-code
-  node_modules/left-pad/AGENTS.md  installed-dependency  no           - (?codex-cli,cursor,devin-desktop,amp)
-  packages/api/AGENTS.md           repo                  enforced?    codex-cli,cursor,devin-desktop,amp
-  vendor/acme/CLAUDE.md            vendored              enforced?    claude-code
-
-Summary
-  instruction files    6
-  third-party origin   2
-  not review-enforced  6
-  first commit by author  5
-  git-ignored path     1
-```
-
-The two third-party rows are the point. Neither file was written by this project. The `node_modules` one is git-ignored, so whether an agent reads it depends on that agent's ignore behaviour, which is why it reads `?codex-cli` and not a flat verdict. The `vendor/` one is committed, so ignore rules do not help; it stays within the discovery scope of any agent whose documented rules walk that part of the tree, and Ovrin keeps the verdict `unverified` wherever loading has not been observed.
+The scanner runs offline and makes no network calls.
 
 ## Install
 
@@ -57,152 +37,141 @@ cd ovrin
 pip install .
 ```
 
-That is the whole install (Ovrin is not yet published on PyPI under this name). The scanner runs offline and makes no network calls. The optional survey tools pull one extra:
+Optional extras: `pip install ".[sign]"` adds manifest signing; `pip install ".[survey]"`
+adds the ecosystem-measurement tools (described below).
+
+## Scan a repository
+
+```
+ovrin scan .
+```
+
+```
+Agent instruction manifest
+  subject      /work/example
+  codeowners   .github/CODEOWNERS
+
+  PATH                             ORIGIN                REVIEW       LOADED BY
+  AGENTS.md                        repo                  enforced?    codex-cli,cursor,copilot
+  CLAUDE.md                        repo                  enforced?    claude-code
+  node_modules/left-pad/AGENTS.md  installed-dependency  no           - (?codex-cli,cursor)
+  vendor/acme/CLAUDE.md            vendored              enforced?    claude-code
+
+Summary
+  instruction files    6
+  third-party origin   2
+  not review-enforced  6
+```
+
+The third-party rows are the point: neither file was written by this project.
+
+Other output formats and the full manifest:
+
+```
+ovrin scan . -f json -o manifest.json        # full provenance manifest
+ovrin scan . -f spdx -o manifest.spdx.json   # SPDX 3.0, sits beside your SBOM
+ovrin harnesses                              # which agent loads which files, and how confident we are
+```
+
+## Gate a pull request
+
+Fail the build when configuration arrives without review or from a dependency:
+
+```
+ovrin scan . --fail-on-unreviewed     # exit 1 if any file has no enforced review
+ovrin scan . --fail-on-third-party    # exit 1 if any file came from a dependency or submodule
+```
+
+Apply a delegation policy (which sources may govern which paths) and emit SARIF
+for code scanning:
+
+```
+ovrin enforce . --policy policy.yaml -f sarif -o ovrin.sarif
+```
+
+Sign a manifest so a reviewer with only the public key can confirm it was not altered:
+
+```
+ovrin keygen --out-dir .ovrin-keys
+ovrin scan . -f json -o manifest.json
+ovrin sign manifest.json --key .ovrin-keys/ovrin-signing.key -o manifest.json.sig
+ovrin verify manifest.json --sig manifest.json.sig --pub .ovrin-keys/ovrin-signing.pub
+```
+
+A full run on a small example repository:
+
+```
+bash examples/example-project/run-ovrin.sh
+```
+
+## Repository layout
+
+```
+src/ovrin/          The scanner, the gate, provenance and review classification,
+                    SPDX output, and manifest signing. This is the tool.
+tests/              Test suite for the tool.
+survey/             Ecosystem measurement over public repositories:
+                    how common agent configuration is, and how much of it is
+                    third-party or unreviewed. Instruction files and executing
+                    configuration (MCP servers, hooks) are measured the same way.
+research/
+  activation/       A reproducible harness that measures, against real agents,
+                    whether a repository's configuration is executed when the
+                    agent opens the repository.
+  ...               Supporting studies and reproducibility material.
+examples/           An example repository and a script that runs the tool on it.
+docs/               Method, threat model, manifest specification, and the
+                    agent loading matrix.
+```
+
+## Research components
+
+Two measurement tools ship with the tool. Both are read-only and reproducible,
+and both are optional — the scanner does not depend on them.
+
+### Ecosystem survey (`survey/`)
+
+Measures, across a frozen, reproducible sample of public repositories, how common
+agent configuration is and how much of it is third-party or outside enforced
+review. It uses the GitHub API only.
 
 ```
 pip install ".[survey]"
+export GITHUB_TOKEN=...                 # a token with public-repo read access
+
+python survey/run_sweep.py              # runs the full protocol in survey/protocol.yaml
 ```
 
-## Use it on your own project
+The run is resumable: it freezes each sample once, continues where it stopped if
+the API rate limit pauses it, and writes a report, a machine-readable analysis,
+and a manifest that records the sample seeds and tool versions. See
+[`survey/README.md`](survey/README.md).
+
+### Activation benchmark (`research/activation/`)
+
+Measures whether a repository's configuration is executed when a real agent
+opens the repository, across agents and dependency depth, using inert markers
+only. Runs against a built-in mock agent out of the box, so you can see the
+whole pipeline before connecting a real one.
 
 ```
-ovrin scan .                       # the table above
-ovrin scan . -f json -o out.json   # the full instruction provenance manifest
-ovrin scan . -f spdx -o out.spdx.json   # SPDX 3.0-aligned, sits beside your SBOM
-ovrin harnesses                    # the loading matrix and its confidence levels
+cd research/activation
+./run.sh                                # self-test with the built-in mock agent
 ```
 
-Gate a pull request in CI:
-
-```
-ovrin scan . --fail-on-unreviewed    # exit 1 if any instruction file has no enforced review
-ovrin scan . --fail-on-third-party   # exit 1 if any arrived from a dependency or submodule
-```
-
-A drop-in GitHub Actions workflow is in [`.github/workflows/scan.yml`](.github/workflows/scan.yml).
-
-## Enforce a provenance policy (experimental)
-
-`ovrin scan` reports; `ovrin enforce` can block. Given an `authority-policy.yaml`
-that declares which sources may govern which paths (the delegation relation
-`D(s, c)`), the gate blocks a third-party instruction file only when third-party
-origin, missing enforceable review, and high-confidence reachability coincide,
-and can emit table, JSON, or SARIF for code scanning:
-
-```
-ovrin enforce . --harness claude-code --policy authority-policy.yaml -f sarif -o ovrin.sarif
-```
-
-See `ovrin enforce --help` for the full set of flags.
-
-## What the manifest records
-
-For each instruction file:
-
-| Field | What it means |
-| --- | --- |
-| `origin.class` | `repo`, `workspace`, `submodule`, `vendored`, `installed-dependency`, `untracked` |
-| `origin.package` | Resolved `name@version` where the ecosystem allows it |
-| `review.ruleMatches` | A CODEOWNERS rule syntactically matches this path |
-| `review.enforceable` | `false` for ignored or untracked paths, `null` when it depends on branch protection |
-| `introducedInAuthorsFirstCommit` | The file's first commit is also that author's earliest in the repo (a git fact, not a PR claim) |
-| `digest` | SHA-256 of the complete file, or `null` — never a hash of part of a file |
-| `reachability` | Per agent: `loaded`, `ignored`, `not-discovered`, or `unverified` |
-
-Full schema: [`docs/manifest-spec.md`](docs/manifest-spec.md).
-
-## On the "loaded by" column
-
-Agents differ, and the differences decide everything. Some walk the whole tree, some read only the repository root, some walk upward past it, and at least one respects ignore rules, which means it never reads `node_modules` at all.
-
-Ovrin does not assume they behave the same. Where a harness's behaviour has not been verified, the verdict is `unverified` and the table prints `?`. Every row in [`docs/loading-matrix.md`](docs/loading-matrix.md) carries a confidence level, and only rows marked `observed` have actually been run against the real agent. The rest are `documented` or `inferred`, and correcting them is the most useful contribution you can make.
-
-## Why SPDX
-
-It is a software artifact, and it belongs in the same bill of materials as everything else. Conventional SBOM generators enumerate packages and miss these loose files, and the inventory tools that have begun to catalogue them (such as agent-bom) do not answer Ovrin's review-coverage, provenance, and reachability questions. The SPDX exporter writes each instruction file as a `software_File` with its digest, origin, and reachability, so those measurements can sit next to a conventional SBOM instead of in a separate silo. Output is SPDX 3.0-aligned; see [`docs/spdx-mapping.md`](docs/spdx-mapping.md) for what "aligned" means and what still needs the official validator.
-
-## Is this real? The prior work
-
-The attack this inventories is not hypothetical. Poisoned agent rules files were demonstrated as a supply chain attack by Pillar Security in 2025, and instruction-file injection has since been documented by NVIDIA, Microsoft, and Aikido. Ovrin is not a rediscovery of that attack. Adjacent tooling has begun to appear: agent-bom inventories instruction artifacts such as CLAUDE.md, .cursorrules and AGENTS.md. Ovrin's contribution is narrower and deeper: ecosystem-scale review-control measurement, origin attribution, carrier provenance, and cross-agent conditional reachability.
-
-Full account with sources: [`docs/related-work.md`](docs/related-work.md).
-
-## What this is not
-
-- Not a content scanner. Ovrin records what exists and where it came from. It makes no judgement about what a file says. Deciding whether an instruction is malicious is a person's job.
-- Not an agent sandbox or a runtime guard.
-- Not a claim that any agent is vulnerable. The matrix records behaviour, including the agents that behave conservatively.
-
-## Sign the manifest
-
-Ovrin's output is a provenance record, so it can be signed. The optional
-`[sign]` extra adds Ed25519 detached signatures:
-
-```
-pip install ".[sign]"
-ovrin keygen --out-dir .ovrin-keys
-ovrin scan . -f json --no-timestamp -o m.json
-ovrin sign m.json --key .ovrin-keys/ovrin-signing.key -o m.json.sig
-ovrin verify m.json --sig m.json.sig --pub .ovrin-keys/ovrin-signing.pub
-```
-
-A verifier holding the public key can confirm the manifest is unchanged and was
-produced by the key holder, but cannot forge one. See [`docs/signing.md`](docs/signing.md).
-
-## Use it in CI and your editor
-
-- **GitHub Action** — one step publishes the manifest and fails the build on
-  unreviewed or third-party instruction files:
-
-  ```yaml
-  - uses: Uvi-12/ovrin@v1
-    with:
-      fail-on-third-party: "true"
-  ```
-
-  A plain workflow is also in [`.github/workflows/scan.yml`](.github/workflows/scan.yml).
-
-- **pre-commit** — add to `.pre-commit-config.yaml`:
-
-  ```yaml
-  - repo: https://github.com/Uvi-12/ovrin
-    rev: v0.1.0
-    hooks:
-      - id: ovrin-scan
-  ```
-
-- **VS Code** — copy [`examples/editor/vscode-tasks.json`](examples/editor/vscode-tasks.json) into `.vscode/tasks.json`.
-
-## Try the demo
-
-```
-pip install ".[sign]"
-bash examples/demo/demo.sh
-```
-
-A 2-minute, self-contained walkthrough: scan → CI gate → SPDX → policy enforce
-→ sign. See [`examples/demo/`](examples/demo/).
+To run it against a real agent, enable that agent in `config.yaml` and follow
+[`research/activation/README.md`](research/activation/README.md).
 
 ## Documentation
 
-- [What an instruction file is, and why it is a dependency](docs/threat-model.md)
-- [The loading matrix](docs/loading-matrix.md)
-- [Manifest schema](docs/manifest-spec.md)
-- [SPDX mapping](docs/spdx-mapping.md)
-- [Origin classification](docs/origin-classification.md)
-- [Survey methodology](docs/methodology.md)
-- [Related work](docs/related-work.md)
-- [Limitations](docs/limitations.md)
-- [Signing manifests](docs/signing.md)
+- [`docs/methodology.md`](docs/methodology.md) — how the survey is sampled and analysed
+- [`docs/threat-model.md`](docs/threat-model.md) — what Ovrin defends against, and what it does not
+- [`docs/origin-classification.md`](docs/origin-classification.md) — how provenance is decided
+- [`docs/loading-matrix.md`](docs/loading-matrix.md) — which agent loads which files, and the confidence behind each verdict
+- [`docs/manifest-spec.md`](docs/manifest-spec.md) and [`docs/spdx-mapping.md`](docs/spdx-mapping.md) — the manifest and its SBOM mapping
 
-## Contributing
+## Status and license
 
-The most useful contribution is a harness reproduction: run an agent, watch what it loads, and turn a `documented` row into an `observed` one. See [CONTRIBUTING.md](CONTRIBUTING.md). Please report security issues in Ovrin itself privately, see [SECURITY.md](SECURITY.md).
-
-## License
-
-Apache-2.0. See [LICENSE](LICENSE).
-
-## Citation
-
-If you build on this work, please cite it. See [CITATION.cff](CITATION.cff).
+Alpha. The scanner and its tests are stable; interfaces may still change.
+Apache-2.0. See [`LICENSE`](LICENSE), [`SECURITY.md`](SECURITY.md), and
+[`CONTRIBUTING.md`](CONTRIBUTING.md).

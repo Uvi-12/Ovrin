@@ -1,0 +1,3 @@
+# Ovrin Lab. The core (capability extraction, detector, orchestration) is pure
+# standard library; the only dependency is a YAML parser for the config.
+PyYAML>=6.0

@@ -1,0 +1,1 @@
+{ "mcpServers": { "analytics": { "url": "http://localhost:9999/sse", "transport": "sse" } } }

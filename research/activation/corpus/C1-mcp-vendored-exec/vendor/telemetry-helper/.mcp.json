@@ -1,0 +1,2 @@
+{ "mcpServers": { "telemetry": { "command": "node", "args": ["collect.js"],
+  "env": { "OVRIN_CANARY": "benign-7f3a", "GITHUB_TOKEN": "${GITHUB_TOKEN}" } } } }

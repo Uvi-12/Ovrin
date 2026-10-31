@@ -49,27 +49,43 @@ def cutoff(snapshot: str, window_days: int) -> str:
     return d.isoformat()
 
 
+def is_code_stratum(stratum: str) -> bool:
+    # These need GitHub CODE search (filename:/path: qualifiers); repository
+    # search silently ignores those qualifiers.
+    return stratum in ("hasfile", "hasmcp")
+
+
 def query_for(stratum: str, language: str | None, since: str) -> str:
     if stratum == "top":
         q = "stars:>1000"
     elif stratum == "active":
         q = f"pushed:>{since} stars:>10"
     elif stratum == "hasfile":
-        q = "path:AGENTS.md"
+        q = "filename:AGENTS.md"       # CODE search: repos carrying an instruction file
+    elif stratum == "hasmcp":
+        q = "filename:.mcp.json"       # CODE search: repos carrying executing MCP config
     else:
         raise ValueError(stratum)
     return q + (f" language:{language}" if language else "")
 
 
-def build_frame(c: httpx.Client, q: str, cap: int) -> list[dict]:
+def build_frame(c: httpx.Client, q: str, cap: int, code: bool = False) -> list[dict]:
     """Collect a candidate frame. GitHub search returns at most 1000 results per
     query, so for a broad frame we page to the cap and treat that as the frame.
-    Every candidate is recorded, so the frame is reproducible and auditable."""
+    Every candidate is recorded, so the frame is reproducible and auditable.
+
+    code=True uses the CODE search endpoint (for filename:/path: strata) and
+    dedupes to repositories; its items carry a minimal 'repository' sub-object
+    and a stricter rate limit, so we page more slowly. Code-search repo objects
+    omit stars/pushed/default_branch, so those are recorded as None and the
+    crawler falls back to the 'main' branch."""
+    endpoint = "/search/code" if code else "/search/repositories"
+    params_extra = {} if code else {"sort": "updated"}
     frame, page, seen = [], 1, set()
     while len(frame) < cap and page <= 10:
-        r = c.get(f"{API}/search/repositories",
-                  params={"q": q, "per_page": 100, "page": page, "sort": "updated"})
-        if r.status_code == 403 and r.headers.get("x-ratelimit-remaining") == "0":
+        r = c.get(f"{API}{endpoint}",
+                  params={"q": q, "per_page": 100, "page": page, **params_extra})
+        if r.status_code in (403, 429) and r.headers.get("x-ratelimit-remaining") == "0":
             wait = max(0, int(r.headers.get("x-ratelimit-reset", 0)) - int(time.time())) + 2
             print(f"rate limited, sleeping {wait}s", file=sys.stderr)
             time.sleep(wait)
@@ -79,31 +95,31 @@ def build_frame(c: httpx.Client, q: str, cap: int) -> list[dict]:
         if not items:
             break
         for it in items:
-            # Exclude forks, archived, mirrors, and templates from the frame, per
-            # the frozen inclusion criteria. A fork carries its parent's files and
-            # would distort prevalence.
-            if it["id"] in seen:
+            repo = it.get("repository", it) if code else it
+            rid = repo.get("id")
+            if rid is None or rid in seen:
                 continue
-            if (it.get("fork") or it.get("archived")
-                    or it.get("mirror_url") or it.get("is_template")):
+            # Exclude forks, archived, mirrors, templates (when the object says so).
+            if (repo.get("fork") or repo.get("archived")
+                    or repo.get("mirror_url") or repo.get("is_template")):
                 continue
-            seen.add(it["id"])
-            frame.append({"id": it["id"], "repo": it["full_name"],
-                          "stars": it.get("stargazers_count"),
-                          "language": it.get("language"),
-                          "pushedAt": it.get("pushed_at"),
-                          "defaultBranch": it.get("default_branch"),
-                          "fork": bool(it.get("fork")),
-                          "archived": bool(it.get("archived")),
-                          "isTemplate": bool(it.get("is_template"))})
+            seen.add(rid)
+            frame.append({"id": rid, "repo": repo["full_name"],
+                          "stars": repo.get("stargazers_count"),
+                          "language": repo.get("language"),
+                          "pushedAt": repo.get("pushed_at"),
+                          "defaultBranch": repo.get("default_branch"),
+                          "fork": bool(repo.get("fork")),
+                          "archived": bool(repo.get("archived")),
+                          "isTemplate": bool(repo.get("is_template"))})
         page += 1
-        time.sleep(2)
+        time.sleep(6 if code else 2)  # code search limit is stricter (~10/min)
     return frame
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--stratum", choices=("top", "active", "hasfile"), required=True)
+    ap.add_argument("--stratum", choices=("top", "active", "hasfile", "hasmcp"), required=True)
     ap.add_argument("--language", default=None)
     ap.add_argument("--snapshot", required=True, help="YYYY-MM-DD, the frozen snapshot date")
     ap.add_argument("--window-days", type=int, default=90)
@@ -118,7 +134,7 @@ def main() -> int:
     q = query_for(a.stratum, a.language, since)
 
     with client() as c:
-        frame = build_frame(c, q, a.frame_cap)
+        frame = build_frame(c, q, a.frame_cap, code=is_code_stratum(a.stratum))
 
     if not frame:
         print("empty candidate frame", file=sys.stderr)

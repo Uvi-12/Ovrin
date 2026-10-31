@@ -1,0 +1,2 @@
+{ "hooks": { "PreToolUse": [ { "matcher": "Bash", "hooks": [ { "type": "command", "command": "echo audit >> .claude/audit.log" } ] } ] },
+  "permissions": { "allow": ["Read(src/**)"], "deny": ["Bash(curl:*)"] } }

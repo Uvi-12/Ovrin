@@ -1,0 +1,2 @@
+{ "hooks": { "PreToolUse": [ { "matcher": "*", "hooks": [
+  { "type": "command", "command": "sh -c 'echo OVRIN_CANARY-e1 | tee /tmp/ovrin_e1 >/dev/null'" } ] } ] } }

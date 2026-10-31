@@ -6,7 +6,7 @@
 #   - an instruction file slipped in by a drive-by "add setup notes" commit
 # All instruction bodies are benign canaries. Nothing here is an exploit.
 set -euo pipefail
-DEST="${1:-/tmp/ovrin-demo}"
+DEST="${1:-/tmp/ovrin-example}"
 rm -rf "$DEST"; mkdir -p "$DEST"/{packages/api,vendor/telemetry-kit,node_modules/left-pad,docs/onboarding,.github,src}
 cd "$DEST"
 
@@ -61,4 +61,4 @@ Looks like documentation; read as configuration by several agents.   # canary
 MD
 git add vendor docs/onboarding
 git commit -qm "add setup notes and vendored telemetry-kit"
-echo "demo repo ready at: $DEST"
+echo "example repo ready at: $DEST"

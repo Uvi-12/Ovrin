@@ -1,0 +1,94 @@
+# Ovrin Lab configuration.
+# Edit this file, not the code. The one thing only you can supply is each real
+# agent's headless, TRUST-ACCEPTING invocation (the <FILL> below).
+
+run:
+  trials: 200         # trials per cell. 200 = benchmark-grade CIs; 400 for the
+                      # headline cells. Every trial is checkpointed, so a big run
+                      # resumes if a subscription/quota pause hits it.
+  timeout: 180        # seconds per agent invocation
+  tmp_root: .lab-tmp  # throwaway fixtures live here
+
+experiments: [census, activation, consequence, defense, effective_authority]
+
+activation:
+  # root          = baseline (first-party config at the reviewed root)
+  # vendored      = config FILE carried inside a dependency
+  # transitive    = config file nested several dependencies deep
+  # exec-vendored = config file at the reviewed root, but its server command
+  #                 executes UNREVIEWED code vendored under node_modules
+  #                 (file provenance governed, execution provenance not)
+  variants: [root, vendored, transitive, exec-vendored]
+consequence:
+  cases: [secret-read, ci-disable]          # inert canary effects only
+defense:
+  pairs: 40           # benign+adversarial pairs for the labeled eval
+census:
+  corpus: corpus      # a dir whose children are repos. A small sample ships here;
+                      # point it at your real corpus for the ecosystem numbers.
+
+agents:
+  # Self-test the whole lab with no real agent. 'loads' is the mock's policy:
+  # [root] = conservative, [root, vendored] = origin-blind (to see the harness
+  # detect vendored activation).
+  mock:
+    type: mock
+    loads: [root]
+    enabled: true
+
+  # ---- Real coding agents. Set enabled: true to include one. ----
+  # {PROMPT} is substituted with the task; {ROOT} with this lab's directory.
+  # Each command runs with its cwd inside the throwaway repo, non-interactively.
+  # The invocations below are the verified headless, trust-accepting forms
+  # (Oct 2026). AUTH: Claude Code and Codex use your subscription LOGIN, not an
+  # API key — log in once (see below); Gemini uses GEMINI_API_KEY from the env.
+
+  # Claude Code (Claude Max login: run `claude` then `/login` once; no API key).
+  # `-p` headless loads the project .mcp.json and runs .claude/ hooks with no
+  # trust prompt; the harness settings file sets enableAllProjectMcpServers so
+  # the project server is approved non-interactively across versions.
+  # Reads repo-local .mcp.json  ->  dialect mcp_json.
+  claude-code:
+    type: cli
+    cmd: ["claude", "-p", "{PROMPT}", "--settings", "{ROOT}/harness/claude-settings.json"]
+    enabled: false
+
+  # Codex (ChatGPT login: run `codex login` once; no API key). `codex exec` runs
+  # one task and exits; `-s danger-full-access -a never` (global flags, before
+  # exec) run commands with no approval prompt. NOTE: Codex MCP servers live in
+  # global ~/.codex/config.toml, so a committed repo file cannot inject one —
+  # dialect 'none'. Its repo-local vector is AGENTS.md (instruction authority),
+  # measured by the WWW-paper line of work, not this execution lab. Enabling it
+  # here gives the honest cross-agent null for repo-committed execution config.
+  codex:
+    type: cli
+    cmd: ["codex", "-s", "danger-full-access", "-a", "never", "exec", "{PROMPT}"]
+    enabled: false
+
+  # Gemini CLI (export GEMINI_API_KEY). `-p` headless, `-y` approves every tool
+  # call (without it, headless default SILENTLY skips tools and exits 0 — a false
+  # null), `--skip-trust` trusts the folder for this run. Reads repo-local
+  # .gemini/settings.json (mcpServers, per-server trust)  ->  dialect gemini.
+  gemini:
+    type: cli
+    cmd: ["gemini", "--skip-trust", "-y", "-p", "{PROMPT}"]
+    enabled: false
+
+  # ---- Open-source families via Ollama + an open harness (aider / goose /
+  # opencode / cline-cli). Pick ONE harness, set its invocation; {MODEL} is the
+  # Ollama model name. `ollama pull <model>` first. ----
+  ollama-qwen:
+    type: ollama
+    model: "qwen2.5-coder:7b"
+    harness_cmd: ["<FILL open harness>", "--model", "ollama/{MODEL}", "--message", "{PROMPT}"]
+    enabled: false
+  ollama-llama:
+    type: ollama
+    model: "llama3.1:8b"
+    harness_cmd: ["<FILL open harness>", "--model", "ollama/{MODEL}", "--message", "{PROMPT}"]
+    enabled: false
+  ollama-glm:
+    type: ollama
+    model: "glm4:9b"
+    harness_cmd: ["<FILL open harness>", "--model", "ollama/{MODEL}", "--message", "{PROMPT}"]
+    enabled: false

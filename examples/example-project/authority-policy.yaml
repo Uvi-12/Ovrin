@@ -1,0 +1,16 @@
+# Example delegation policy.
+#
+# Declares which sources are allowed to govern which paths. This policy is
+# deny-by-default and delegates authority only to first-party repository files.
+# A configuration file carried in by a dependency is therefore not delegated,
+# so `ovrin enforce` reports it as an unauthorized instruction and the gate
+# blocks it.
+version: 1
+default:
+  instruction: false
+delegations:
+  - source: "repo:default"
+    context:
+      paths: []            # empty = any path
+    authority:
+      instruction: true
