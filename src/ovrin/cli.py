@@ -34,9 +34,30 @@ def _scan(a: argparse.Namespace) -> int:
         print(f"ovrin: wrote {a.output}", file=sys.stderr)
     else:
         print(payload)
+    quiet = a.format == "table"   # the table already shows why
+    failed = False
     if a.fail_on_third_party and m["summary"]["thirdParty"]:
-        return FINDINGS
+        failed = True
+        if not quiet:
+            for e in m["instructions"]:
+                if e["origin"]["class"] in {"vendored", "submodule", "installed-dependency"}:
+                    print(f"ovrin: THIRD-PARTY {e['path']} ({e['origin']['class']})",
+                          file=sys.stderr)
     if a.fail_on_unreviewed and m["summary"]["notReviewEnforced"]:
+        failed = True
+        if not quiet:
+            for e in m["instructions"]:
+                if e["review"]["enforceable"] is not True:
+                    print(f"ovrin: UNREVIEWED {e['path']}: {e['review']['reason']}",
+                          file=sys.stderr)
+    if a.fail_on_exec_risk and m["summary"]["executing"]["blocked"]:
+        failed = True
+        if not quiet:
+            for e in m["executing"]:
+                for r in e["risk"]["reasons"]:
+                    if r["severity"] == "block":
+                        print(f"ovrin: BLOCK {e['path']}: {r['detail']}", file=sys.stderr)
+    if failed:
         return FINDINGS
     return OK
 
@@ -56,7 +77,7 @@ def _enforce(a: argparse.Namespace) -> int:
 
     policy = None
     if getattr(a, "policy", None):
-        from .delegation import load_policy, PolicyError
+        from .delegation import PolicyError, load_policy
         try:
             policy = load_policy(Path(a.policy).resolve())
         except PolicyError as e:
@@ -158,6 +179,17 @@ def _harnesses(a: argparse.Namespace) -> int:
         for claim, d in (h.claims or {}).items():
             print(f"      {claim:<20} {str(d.get('value')):<12} {d.get('confidence')}")
     print()
+    from .execconfig import load as load_exec
+    cat = load_exec()
+    print(f"executing configuration v{cat.version} (dated {cat.verified})\n")
+    print("  Loaded from the directory the agent is launched in (the repository root).\n")
+    for f in cat.formats:
+        auto = "auto" if f.auto_exec else "model-invoked"
+        for ld in f.loaders:
+            print(f"  {f.file:<30} {ld['harness']:<14} {auto:<14} {ld.get('confidence')}")
+    for n in cat.not_repo_local:
+        print(f"  {'(none in repository)':<30} {n['harness']:<14} {'-':<14} {n['reason']}")
+    print()
     return OK
 
 
@@ -202,7 +234,7 @@ def _verify(a: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="ovrin",
-        description="Inventory and enforce the instruction files your coding agent reads.")
+        description="Inventory and gate the configuration your coding agent reads and runs.")
     p.add_argument("--version", action="version", version=f"ovrin {__version__}")
     sub = p.add_subparsers(dest="command", required=True)
 
@@ -216,6 +248,9 @@ def build_parser() -> argparse.ArgumentParser:
     sc.add_argument("--no-color", action="store_true")
     sc.add_argument("--fail-on-third-party", action="store_true")
     sc.add_argument("--fail-on-unreviewed", action="store_true")
+    sc.add_argument("--fail-on-exec-risk", action="store_true",
+                    help="fail when executing configuration that loads at the root "
+                         "runs code without enforced review, or runs third-party code")
     sc.set_defaults(func=_scan)
 
     en = sub.add_parser("enforce",

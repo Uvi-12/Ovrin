@@ -1,5 +1,5 @@
-name: "Ovrin instruction scan"
-description: "Inventory AI coding-agent instruction files; fail on unreviewed or third-party ones."
+name: "Ovrin agent configuration scan"
+description: "Inventory AI coding-agent instruction files and executing config; fail on unreviewed or third-party ones."
 branding:
   icon: "shield"
   color: "purple"
@@ -13,6 +13,9 @@ inputs:
   fail-on-unreviewed:
     description: "Fail the build if any instruction file lacks enforced review"
     default: "false"
+  fail-on-exec-risk:
+    description: "Fail the build if executing config (MCP servers, hooks) loaded at the root runs unreviewed or dependency code"
+    default: "true"
   manifest-path:
     description: "Where to write the JSON provenance manifest"
     default: "ovrin-manifest.json"
@@ -34,4 +37,5 @@ runs:
         args=()
         [ "${{ inputs.fail-on-third-party }}" = "true" ] && args+=(--fail-on-third-party)
         [ "${{ inputs.fail-on-unreviewed }}" = "true" ] && args+=(--fail-on-unreviewed)
+        [ "${{ inputs.fail-on-exec-risk }}" = "true" ] && args+=(--fail-on-exec-risk)
         ovrin scan "${{ inputs.path }}" "${args[@]}"

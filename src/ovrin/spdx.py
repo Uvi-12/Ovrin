@@ -1,9 +1,10 @@
 """Export a manifest as SPDX 3.0 JSON-LD.
 
-The argument, not the format, is the point: instruction files are software
-artifacts that ship with a project and change how it is built. They belong in
-the same bill of materials as everything else. We call the output SPDX-aligned,
-not SPDX-compliant, until it has been through the official validator.
+The argument, not the format, is the point: instruction files and executing
+agent configuration are software artifacts that ship with a project and change
+how it is built. They belong in the same bill of materials as everything else.
+We call the output SPDX-aligned, not SPDX-compliant, until it has been through
+the official validator.
 """
 
 from __future__ import annotations
@@ -37,6 +38,25 @@ def to_spdx(manifest: dict[str, Any], name: str = "agent-instructions") -> dict[
                         f"reviewEnforceable={e['review']['enforceable']}; "
                         f"reachableBy=" + ",".join(
                             h for h, r in e["reachability"].items() if r["verdict"] == "loaded")),
+        }
+        if e.get("digest"):
+            algo, _, val = e["digest"].partition(":")
+            node["verifiedUsing"] = [{"type": "Hash", "algorithm": algo, "hashValue": val}]
+        graph.append(node)
+    for e in manifest.get("executing", []):
+        sid = _sid(e["path"])
+        file_ids.append(sid)
+        kinds = sorted({c["kind"] for c in e["capabilities"]})
+        node = {
+            "type": "software_File", "spdxId": sid, "creationInfo": f"{NS}:creation",
+            "name": e["path"], "software_primaryPurpose": "configuration",
+            "comment": (f"executingKind={e['kind']}; origin={e['origin']['class']}; "
+                        f"reviewEnforceable={e['review']['enforceable']}; "
+                        f"loadedBy=" + ",".join(
+                            h for h, r in e["loadedBy"].items() if r["verdict"] == "loaded")
+                        + f"; capabilities={','.join(kinds)}"
+                        + "; runsThirdPartyCode="
+                        + ",".join(t["path"] for t in e["runsThirdPartyCode"])),
         }
         if e.get("digest"):
             algo, _, val = e["digest"].partition(":")

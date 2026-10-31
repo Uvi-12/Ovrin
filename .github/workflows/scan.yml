@@ -1,5 +1,6 @@
-# Drop-in Ovrin gate: inventory instruction files and fail the build if any
-# are unreviewed or arrive from a third-party dependency.
+# Drop-in Ovrin gate: inventory instruction files and executing agent
+# configuration, and fail the build if any are unreviewed, arrive from a
+# third-party dependency, or run dependency code when an agent opens the repo.
 name: ovrin-instruction-scan
 
 on:
@@ -23,6 +24,8 @@ jobs:
         run: ovrin scan . -f json -o ovrin-manifest.json
       - name: Fail on unreviewed or third-party instruction files
         run: ovrin scan . --fail-on-unreviewed --fail-on-third-party
+      - name: Fail on executing config that runs unreviewed or dependency code
+        run: ovrin scan . --fail-on-exec-risk
       - uses: actions/upload-artifact@v4
         if: always()
         with:

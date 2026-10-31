@@ -38,6 +38,34 @@ Notes worth carrying into any talk:
 - Gemini CLI reads `AGENTS.md` only when configured, and it respects ignore rules, so it does not read `node_modules`.
 - Claude Code does not read `AGENTS.md` at all.
 
+## Executing configuration, verified October 2026
+
+Instruction files change what an agent intends. These files make it run code.
+The rules live in `src/ovrin/data/exec_formats.yaml` and are printed by
+`ovrin harnesses`.
+
+| File | Agent | Runs | Confidence |
+| --- | --- | --- | --- |
+| `.mcp.json` | Claude Code | on load | observed |
+| `.claude/settings.json` (hooks) | Claude Code | on event | observed |
+| `.claude/settings.local.json` (hooks) | Claude Code | on event | documented |
+| `.claude/skills/*/SKILL.md` | Claude Code | when the model invokes it | documented |
+| `.gemini/settings.json` | Gemini CLI | on load | observed |
+| `.cursor/mcp.json` | Cursor | on load | documented |
+| none in the repository | Codex CLI | n/a | observed |
+
+All of these are loaded from the directory the agent is launched in, which for
+a repository is the root. `observed` here means the activation benchmark in
+`research/activation` ran the real agent with the file at the root and recorded
+it executing, and its frozen results are committed under
+`research/activation/frozen/`. The same benchmark placed identical files inside
+a vendored dependency and several dependencies deep and recorded no execution,
+so the scanner reports a buried file as `not-discovered` with the directory an
+agent would have to be launched in, and never as loaded. Codex keeps MCP
+servers and other executing settings in the global `~/.codex/config.toml`, so a
+committed repository file cannot inject them; the benchmark recorded no
+execution from repository files.
+
 ## Why the ignore column decides the third-party question
 
 The naive claim is that any instruction file inside a dependency reaches the agent. That is not true in general.

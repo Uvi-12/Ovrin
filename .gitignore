@@ -7,6 +7,10 @@ keys.env
 __pycache__/
 *.pyc
 *.egg-info/
+.pytest_cache/
+.ruff_cache/
+dist/
+build/
 # research run outputs (commit frozen samples + reports deliberately)
 research/activation/results/
 research/activation/.lab-tmp/

@@ -2,15 +2,39 @@
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [0.2.0] - 2026-10-31
 
 ### Added
+- Executing configuration in `ovrin scan`: `.mcp.json`, `.cursor/mcp.json`,
+  `.gemini/settings.json`, `.claude/settings.json` and `.claude/settings.local.json`
+  hooks, and `.claude/skills/*/SKILL.md`. Each file gets the same origin, review,
+  and git facts as an instruction file, plus which agent loads it, what it can do
+  (process execution, network egress, credential references, permission grants,
+  unpinned packages, bundled scripts), and which dependency code its commands run.
+- `--fail-on-exec-risk`: fails when root-loaded executing configuration runs code
+  with no enforced review, or runs code that lives inside a dependency. Buried
+  configuration, unpinned versions, and skills are reported as warnings only.
+- `src/ovrin/data/exec_formats.yaml` with per-agent loading rules and confidence;
+  Claude Code and Gemini CLI root loading are `observed` by the activation
+  benchmark, Codex is recorded as not repository-local.
+- Executing files in the SPDX export, an "Executing configuration" section in the
+  table output, and a `fail-on-exec-risk` input on the GitHub Action.
+- The example repository now includes a first-party pinned `.mcp.json`, a drive-by
+  `.claude/settings.json` hook that runs a vendored script, and a buried vendored
+  `.mcp.json`.
+
+### Changed
+- Manifest schema 0.2.0 adds `execRules`, `executing`, and `summary.executing`.
+  Every 0.1.0 field is unchanged.
+- The table header reads "Agent configuration manifest".
+
+### Added earlier in this release cycle
 - `ovrin keygen` / `ovrin sign` / `ovrin verify`: Ed25519 detached signatures over the
   manifest's canonical bytes (optional `[sign]` extra). Asymmetric by design, so a
   verifier cannot forge a manifest.
 - Composite GitHub Action (`action.yml`), a `.github/workflows/scan.yml`, a pre-commit
   hook (`.pre-commit-hooks.yaml`), and a VS Code task (`examples/editor/`).
-- A self-contained 2-minute demo (`examples/demo/`): scan → gate → SPDX → enforce → sign.
+- A self-contained example (`examples/example-project/`): scan → gate → SPDX → enforce → sign.
 - `scripts/promote-harness-claim.py` to flip a claim to `observed` after a real agent run,
   and `scripts/validate_spdx.py` for a structural SPDX check.
 - Tests for the SPDX exporter, the `enforce` CLI + SARIF, manifest signing, and a

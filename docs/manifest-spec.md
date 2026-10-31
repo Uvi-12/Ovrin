@@ -1,6 +1,8 @@
-# Manifest schema 0.1.0
+# Manifest schema 0.2.0
 
-A JSON document describing every agent instruction file found under a scan root.
+A JSON document describing every agent instruction file, and every piece of
+executing agent configuration, found under a scan root. 0.2.0 adds `execRules`,
+`executing`, and `summary.executing`; every 0.1.0 field is unchanged.
 
 ## Top level
 
@@ -11,8 +13,10 @@ A JSON document describing every agent instruction file found under a scan root.
 | `tool` | object | `{name, version}` |
 | `harnessRules` | object | Version and verification date of the loading matrix used |
 | `subject` | object | Scan root, git status, CODEOWNERS location |
-| `instructions` | array | One entry per file, sorted by path |
-| `summary` | object | Counts by origin, family, and risk category |
+| `execRules` | object | Version and date of the executing-config rules, and agents whose executing config is not repository-local |
+| `instructions` | array | One entry per instruction file, sorted by path |
+| `executing` | array | One entry per executing configuration file, sorted by path |
+| `summary` | object | Counts by origin, family, and risk category; `summary.executing` covers the `executing` array |
 
 ## An instruction entry
 
@@ -49,6 +53,66 @@ A JSON document describing every agent instruction file found under a scan root.
   }
 }
 ```
+
+## An executing entry
+
+```json
+{
+  "path": ".claude/settings.json",
+  "kind": "claude-settings",
+  "autoExec": true,
+  "launchDir": "",
+  "digest": "sha256:...",
+  "origin": { "class": "repo", "evidence": ["tracked in git"] },
+  "review": { "ruleMatches": true, "enforceable": null, "reason": "..." },
+  "gitIgnored": false,
+  "loadedBy": {
+    "claude-code": {
+      "verdict": "loaded",
+      "confidence": "observed",
+      "reason": "at the repository root, where the agent is launched",
+      "source": "research/activation, root placement"
+    }
+  },
+  "parsed": true,
+  "parseError": null,
+  "capabilities": [
+    { "kind": "process_exec",
+      "detail": "hook on SessionStart (matcher '*') runs: bash vendor/telemetry-kit/setup.sh" }
+  ],
+  "runsThirdPartyCode": [
+    { "path": "vendor/telemetry-kit/setup.sh", "origin": "vendored",
+      "container": "vendor", "package": null }
+  ],
+  "risk": {
+    "blocked": true,
+    "reasons": [
+      { "severity": "block", "code": "third-party-code",
+        "detail": "runs vendored code at vendor/telemetry-kit/setup.sh, outside the project's own reviewed source" }
+    ]
+  }
+}
+```
+
+`launchDir` is the directory an agent would have to be launched in to load the
+file; `""` means the repository root. A file with a non-empty `launchDir` is
+`not-discovered` for every agent and is never reported as loaded.
+
+Capability kinds: `process_exec`, `network_egress`, `credential_ref`, `env_read`,
+`permission_grant`, `floating_version`, `bundled_script`. They are facts read
+from the file as data. The scanner never runs the file.
+
+Risk codes. `block` reasons fail `--fail-on-exec-risk`; `warn` reasons never do.
+
+| Code | Severity | When |
+| --- | --- | --- |
+| `unreviewed-exec` | block | Loaded at the root, can run code, and `review.enforceable` is `false` |
+| `third-party-code` | block | Loaded at the root and a command runs a path inside a vendored, installed, or submodule location |
+| `third-party-config` | block | The file itself is third-party and loads at the root |
+| `nested-third-party` | warn | Third-party executing config that loads only from its own directory |
+| `model-invoked-exec` | warn | A skill that bundles code and is not covered by enforced review |
+| `floating-version` | warn | Loaded at the root and runs a package version that can change without a commit |
+| `unparsed` | warn | The file could not be parsed |
 
 ## Origin classes
 

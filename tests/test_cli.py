@@ -6,7 +6,7 @@ from ovrin.cli import main
 
 def test_table(repo: Path, capsys):
     assert main(["scan", str(repo), "--no-color"]) == 0
-    assert "instruction manifest" in capsys.readouterr().out
+    assert "configuration manifest" in capsys.readouterr().out
 
 
 def test_json(repo: Path, capsys):

@@ -22,7 +22,7 @@ Ovrin inventories those files and tells you, for each one:
 
 - **where it came from** — written by the team, vendored in, or pulled in by a dependency;
 - **whether review is actually enforced on it** — not just that a `CODEOWNERS` line matches the path, but that it requires an approval;
-- **which agents will load it**, and what it is allowed to do (run a process, reach the network, read an environment variable, pin to a floating version).
+- **which agents will load it**, and, for configuration that runs code, **what it can do**: spawn a process, reach the network, reference a credential, run an unpinned package, or run code that lives inside a dependency.
 
 It then turns that inventory into a build gate you can run in CI, an
 SBOM-aligned manifest, and a signed, tamper-evident record.
@@ -47,23 +47,51 @@ ovrin scan .
 ```
 
 ```
-Agent instruction manifest
+Agent configuration manifest
   subject      /work/example
   codeowners   .github/CODEOWNERS
+  rules        harnesses v0.1.0 (matrix dated 2026-08-11, documented)
+               executing config v0.2.0 (dated 2026-10-31; see `ovrin harnesses`)
 
+Instruction files
   PATH                             ORIGIN                REVIEW       LOADED BY
-  AGENTS.md                        repo                  enforced?    codex-cli,cursor,copilot
   CLAUDE.md                        repo                  enforced?    claude-code
-  node_modules/left-pad/AGENTS.md  installed-dependency  no           - (?codex-cli,cursor)
-  vendor/acme/CLAUDE.md            vendored              enforced?    claude-code
+  docs/onboarding/AGENTS.md        repo                  enforced?    codex-cli,cursor,devin-desktop
+  node_modules/left-pad/AGENTS.md  installed-dependency  no           - (?codex-cli,cursor,devin-desktop)
+  packages/api/AGENTS.md           repo                  enforced?    codex-cli,cursor,devin-desktop
+  vendor/telemetry-kit/CLAUDE.md   vendored              enforced?    claude-code
+
+Executing configuration
+  PATH                            ORIGIN                REVIEW       LOADED BY               CAN
+  .claude/settings.json           repo                  enforced?    claude-code             exec
+  .mcp.json                       repo                  enforced?    claude-code             exec
+  vendor/telemetry-kit/.mcp.json  vendored              enforced?    - (not at root)         exec
+
+  BLOCK  .claude/settings.json: runs vendored code at vendor/telemetry-kit/setup.sh, outside the project's own reviewed source
+  warn   vendor/telemetry-kit/.mcp.json: vendored executing configuration; loaded only if an agent is launched in vendor/telemetry-kit
+  Not repository-local: codex-cli (executing config is global, so a committed file cannot inject it).
 
 Summary
-  instruction files    6
+  instruction files    5
   third-party origin   2
-  not review-enforced  6
+  not review-enforced  5
+  first commit by author  4
+  git-ignored path     1
+  executing config     3  (loaded at root 2, can run code 3)
+  runs third-party code  1
+  exec-risk findings   1 blocking
+
+  '?' marks a harness whose behaviour we have not verified.
+  See docs/loading-matrix.md before citing any verdict.
 ```
 
 The third-party rows are the point: neither file was written by this project.
+The `BLOCK` line is the sharper case. The hook in `.claude/settings.json` sits at
+the root, where Claude Code loads it on every session, and it runs a script that
+lives inside a vendored package. The vendored package's own `.mcp.json` is only
+a warning, because an agent launched at the root does not load it; the
+activation benchmark recorded buried configuration executing in none of its
+trials.
 
 Other output formats and the full manifest:
 
@@ -78,9 +106,18 @@ ovrin harnesses                              # which agent loads which files, an
 Fail the build when configuration arrives without review or from a dependency:
 
 ```
-ovrin scan . --fail-on-unreviewed     # exit 1 if any file has no enforced review
-ovrin scan . --fail-on-third-party    # exit 1 if any file came from a dependency or submodule
+ovrin scan . --fail-on-unreviewed     # exit 1 if any instruction file has no enforced review
+ovrin scan . --fail-on-third-party    # exit 1 if any instruction file came from a dependency or submodule
+ovrin scan . --fail-on-exec-risk      # exit 1 if executing config loaded at the root runs
+                                      # code with no enforced review, or runs dependency code
 ```
+
+`--fail-on-exec-risk` blocks only what an agent would actually run: a `.mcp.json`
+server, a `.claude/settings.json` or `.gemini/settings.json` hook, at the
+repository root, that either has no enforced review or executes a path inside a
+vendored or installed dependency. Executing configuration buried in a
+dependency, unpinned package versions, and skills (which the model, not the
+harness, decides to run) are reported as warnings and never fail the build.
 
 Apply a delegation policy (which sources may govern which paths) and emit SARIF
 for code scanning:

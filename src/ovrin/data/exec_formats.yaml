@@ -1,0 +1,77 @@
+version: 0.2.0
+verified: '2026-10-31'
+# Configuration that causes code to run when a coding agent opens a repository,
+# as distinct from instruction files, which only shape what the agent intends.
+#
+# Loading model. An agent reads these files from the directory it is launched
+# in, which for a repository is the root. A copy buried inside a dependency is
+# not loaded when the agent is launched at the root. The activation benchmark
+# (research/activation) observed exactly this: root placement executed in every
+# trial, vendored and transitive placement in none. So a nested file is
+# reported with the directory the agent would have to be launched in, and it is
+# never reported as loaded from the root.
+#
+# Confidence follows the loading matrix: 'observed' means the activation
+# benchmark ran the real agent against this file at the root and recorded it
+# executing; 'documented' means the vendor documents the behaviour and we have
+# not run it ourselves.
+formats:
+- kind: mcp
+  file: .mcp.json
+  parsers: [mcp]
+  autoExec: true
+  note: Project-scoped MCP servers. Each stdio server is a process the agent spawns.
+  loaders:
+  - harness: claude-code
+    confidence: observed
+    source: research/activation, root placement (frozen results in research/activation/frozen/)
+- kind: cursor-mcp
+  file: .cursor/mcp.json
+  parsers: [mcp]
+  autoExec: true
+  note: Cursor project MCP configuration.
+  loaders:
+  - harness: cursor
+    confidence: documented
+    source: https://docs.cursor.com/context/mcp
+- kind: gemini-settings
+  file: .gemini/settings.json
+  parsers: [mcp, settings]
+  autoExec: true
+  note: Gemini CLI project settings. Can declare MCP servers and command hooks.
+  loaders:
+  - harness: gemini-cli
+    confidence: observed
+    source: research/activation, root placement (frozen results in research/activation/frozen/)
+- kind: claude-settings
+  file: .claude/settings.json
+  parsers: [settings]
+  autoExec: true
+  note: Claude Code project settings. Command hooks run a shell command on an event; permission rules change what runs without asking.
+  loaders:
+  - harness: claude-code
+    confidence: observed
+    source: research/activation, root placement (frozen results in research/activation/frozen/)
+- kind: claude-settings-local
+  file: .claude/settings.local.json
+  parsers: [settings]
+  autoExec: true
+  note: Personal Claude Code settings. Normally git-ignored, so it is never reviewed.
+  loaders:
+  - harness: claude-code
+    confidence: documented
+    source: https://code.claude.com/docs/en/settings
+- kind: skill
+  file: .claude/skills/*/SKILL.md
+  parsers: [skill]
+  autoExec: false
+  note: A skill is discovered automatically but run only when the model invokes it, so it is reported but never counted as auto-executing.
+  loaders:
+  - harness: claude-code
+    confidence: documented
+    source: https://code.claude.com/docs/en/skills
+# Agents whose executing configuration lives outside the repository, so a
+# committed file cannot inject it. Reported so an empty column is not misread.
+not_repo_local:
+- harness: codex-cli
+  reason: MCP servers and other executing settings live in the global ~/.codex/config.toml, not in the repository. The activation benchmark recorded no execution from repository files.
